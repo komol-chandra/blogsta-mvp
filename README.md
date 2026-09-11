@@ -15,6 +15,23 @@ frontend/   React app (Vite, react-router, axios)
 docs/       Planning docs
 ```
 
+## Docker setup (backend + frontend + MySQL)
+
+```bash
+cp .env.example .env   # edit MYSQL_*/SECRET_KEY if needed
+docker compose up --build
+```
+- Frontend: `http://localhost:5173`
+- Backend API / Swagger docs: `http://localhost:8000/docs`
+- MySQL is reachable from the host at `localhost:3307` (mapped to avoid clashing with a
+  local MySQL install on the default 3306); services talk to each other over the compose
+  network as `mysql:3306`.
+
+Source is bind-mounted into the backend/frontend containers, so `uvicorn --reload` and
+Vite's dev server both hot-reload on file changes. Tables are auto-created on first
+backend start, same as the non-Docker flow. Run `docker compose down -v` to also drop the
+MySQL data volume.
+
 ## Backend setup
 
 1. Create a MySQL database and user:
