@@ -1,0 +1,1065 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sokrio Task Manager</title>
+  <style>
+    :root{--ink:#16251f;--muted:#6d7b74;--line:#dfe7e2;--bg:#f5f7f5;--panel:#fff;--green:#0f6b4f;--green2:#e3f2ec;--orange:#e38b39;--red:#c34b4b;--blue:#3971c7;--shadow:0 12px 36px #1b3b2c12}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+    .app{display:flex;min-height:100vh}.sidebar{background:#102c22;color:#dbe9e3;padding:26px 18px;width:244px;flex-shrink:0;position:sticky;top:0;height:100vh;overflow:hidden;transition:all .3s ease}.app.sidebar-collapsed .sidebar{width:0;padding:0;margin:0;opacity:0;pointer-events:none}.brand{display:flex;align-items:center;gap:11px;padding:0 9px 27px}.mark{width:38px;height:38px;border-radius:12px;background:#9bd5bd;color:#123326;display:grid;place-items:center;font-weight:900;font-size:20px}.brand strong{display:block;color:#fff;font-size:16px}.brand small{opacity:.65}.nav-label{font-size:10px;font-weight:800;letter-spacing:.16em;opacity:.48;padding:15px 12px 7px}.nav{display:grid;gap:5px}.nav button{border:0;background:transparent;color:#bdcec7;padding:11px 12px;border-radius:10px;text-align:left;display:flex;align-items:center;gap:11px}.nav button:hover,.nav button.active{background:#21493a;color:white}.nav .ico{width:20px;text-align:center}.nav .badge{margin-left:auto;background:#dc8a3a;color:white;border-radius:20px;padding:1px 7px;font-size:11px}.side-foot{position:absolute;bottom:22px;left:18px;right:18px;background:#17392d;border:1px solid #2c4c40;border-radius:12px;padding:13px}.side-foot b{display:block;color:white}.side-foot small{opacity:.63}.sidebar-toggle{position:fixed;left:10px;top:20px;z-index:15;width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:white;display:grid;place-items:center;cursor:pointer;font-size:18px;color:var(--green);box-shadow:0 2px 8px rgba(0,0,0,.1);transition:all .3s ease}.app.sidebar-collapsed .sidebar-toggle{left:10px}.sidebar-toggle:hover{background:var(--green);color:white;transform:scale(1.05)}
+    .main{flex:1;min-width:0;display:flex;flex-direction:column}.topbar{height:74px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 34px;position:sticky;top:0;z-index:5}.crumb{color:var(--muted);font-size:13px}.crumb b{color:var(--ink)}.top-actions{display:flex;align-items:center;gap:12px}.month,.role{border:1px solid var(--line);border-radius:9px;padding:8px 12px;background:white;color:var(--ink)}.bell{border:0;background:#f0f4f1;width:38px;height:38px;border-radius:50%;position:relative}.bell:after{content:"3";position:absolute;right:-2px;top:-4px;background:var(--orange);color:white;font-size:10px;width:17px;height:17px;border-radius:50%;display:grid;place-items:center}.avatar{width:38px;height:38px;border-radius:50%;background:#d4eadf;display:grid;place-items:center;color:var(--green);font-weight:800}.content{padding:28px 34px 60px;max-width:100%;width:100%;box-sizing:border-box}.view{display:none}.view.active{display:block}.heading{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:24px}.heading h1{font-size:28px;line-height:1.15;margin:0 0 7px;letter-spacing:-.03em}.heading p{margin:0;color:var(--muted)}.btn{border:1px solid var(--line);background:white;border-radius:9px;padding:9px 14px;font-weight:700;color:var(--ink)}.btn:hover{border-color:#aac1b7}.btn.primary{border-color:var(--green);background:var(--green);color:white}.btn.danger{border-color:#f0caca;color:var(--red);background:#fff8f8}.btn.small{padding:6px 10px;font-size:12px}.grid{display:grid;gap:18px}.kpis{grid-template-columns:repeat(4,1fr)}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}.kpi{padding:18px}.kpi .label{color:var(--muted);font-weight:650}.kpi .num{font-size:30px;font-weight:800;margin:9px 0 1px;letter-spacing:-.04em}.delta{font-size:12px;color:var(--green)}.dashboard-grid{grid-template-columns:1.35fr .85fr;margin-top:18px}.pad{padding:21px}.card-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.card-title h3{font-size:16px;margin:0}.muted{color:var(--muted)}.progress-row{display:grid;grid-template-columns:120px 1fr 35px;align-items:center;gap:12px;margin:13px 0}.bar{height:8px;background:#edf1ee;border-radius:10px;overflow:hidden}.bar span{display:block;height:100%;border-radius:10px;background:var(--green)}.donut-wrap{display:flex;align-items:center;justify-content:center;gap:30px;padding:8px}.donut{width:145px;height:145px;border-radius:50%;background:conic-gradient(var(--green) 0 54%,#f0aa5f 54% 75%,#d65b5b 75% 88%,#dce4df 88%);position:relative}.donut:after{content:"88%\A completed";white-space:pre;position:absolute;inset:22px;border-radius:50%;background:white;display:grid;place-items:center;text-align:center;font-weight:800;font-size:18px}.legend div{margin:10px 0}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px}.list{display:grid;gap:9px}.task-mini{display:grid;grid-template-columns:1fr auto;gap:8px;border:1px solid var(--line);border-radius:10px;padding:12px}.task-mini b{display:block}.task-mini small{color:var(--muted)}
+    .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}.search{flex:1;min-width:220px;position:relative}.search input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--line);border-radius:9px;background:white}.search span{position:absolute;left:12px;top:10px;color:var(--muted)}.filter{padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:white}.table-card{overflow:auto}table{border-collapse:collapse;width:100%}/* User-wise report: keep the wide table inside its card without horizontal page overflow */
+#user-report table{table-layout:fixed;width:100%}#user-report td,#user-report th{white-space:normal;overflow-wrap:break-word}#user-report td{vertical-align:top}#user-report th:nth-child(1){width:11%}#user-report th:nth-child(2){width:18%}#user-report th:nth-child(3){width:9%}#user-report th:nth-child(4){width:8%}#user-report th:nth-child(5){width:9%}#user-report th:nth-child(6){width:9%}#user-report th:nth-child(7){width:8%}#user-report th:nth-child(8){width:9%}#user-report th:nth-child(9){width:13%}#user-report th:nth-child(10){width:6%}th{text-align:left;padding:13px 16px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);background:#fbfcfb;white-space:nowrap}td{padding:14px 16px;border-bottom:1px solid #edf1ee;vertical-align:middle}tbody tr:hover{background:#fbfdfc}.task-name{font-weight:750}.task-name small{display:block;font-weight:400;color:var(--muted);margin-top:3px}.status{display:inline-flex;padding:4px 9px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.03em;background:#edf1ef;color:#52645c}.status.approved,.status.achieved{background:#e1f2eb;color:#187052}.status.submitted{background:#e6effb;color:#2e65ae}.status.rejected,.status.not-achieved{background:#fae8e8;color:#b54343}.status.draft,.status.partially-achieved{background:#fff0df;color:#ad672b}.priority{font-weight:700}.priority:before{content:"";display:inline-block;width:7px;height:7px;background:#94a39b;border-radius:50%;margin-right:7px}.priority.high:before,.priority.critical:before{background:#db5d54}.priority.medium:before{background:#e6a44c}.tinybar{width:90px;display:inline-block;vertical-align:middle}.row-actions{white-space:nowrap}.row-actions button{border:0;background:transparent;color:var(--green);font-weight:800;padding:5px}.icon-btn{width:32px!important;height:32px!important;display:inline-grid!important;place-items:center!important;border:1px solid var(--line)!important;background:#fff!important;border-radius:8px!important;padding:0!important;margin:0 2px;color:var(--green)!important;font-size:15px!important}.icon-btn:hover{background:var(--green2)!important;border-color:#9fc6b5!important}.icon-btn.complete{background:var(--green)!important;color:#fff!important;border-color:var(--green)!important}.icon-btn[disabled]{opacity:.55;cursor:default}.empty{padding:55px;text-align:center;color:var(--muted)}
+    .report-grid{grid-template-columns:repeat(3,1fr);margin-bottom:18px}.report-stat{padding:22px}.report-stat b{font-size:27px;display:block}.report-stat span{color:var(--muted)}.approval-card{display:grid;grid-template-columns:1fr auto;align-items:center;gap:20px;padding:17px;margin-bottom:11px}.approval-actions{display:flex;gap:8px}.team-plan{padding:20px;margin-bottom:14px}.plan-head{display:flex;justify-content:space-between;gap:18px;align-items:center}.person{display:flex;gap:12px;align-items:center}.person .avatar{flex:none}.plan-metrics{display:flex;gap:26px;margin:18px 0;padding:14px 0;border-block:1px solid var(--line)}.plan-metrics div{display:grid}.plan-metrics b{font-size:20px}.plan-metrics small{color:var(--muted)}.plan-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}.review-task{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:start;border-bottom:1px solid var(--line);padding:13px 0}.calendar{display:grid;grid-template-columns:repeat(7,minmax(115px,1fr));background:var(--line);gap:1px;border:1px solid var(--line);border-radius:13px;overflow:auto}.cal-head{background:#f4f7f5;text-transform:uppercase;font-size:11px;font-weight:800;color:var(--muted);padding:10px;text-align:center}.cal-day{background:#fff;min-height:150px;padding:9px;transition:.15s;cursor:pointer}.cal-day:hover,.cal-day:focus{background:#f4faf7;outline:2px solid var(--green);outline-offset:-2px}.cal-day.other{background:#f8faf8;cursor:default}.cal-day.dragover{background:#e6f4ee;box-shadow:inset 0 0 0 2px var(--green)}.day-num{font-weight:800;font-size:12px;color:#5e6e66;margin-bottom:7px}.day-num.today{display:inline-grid;place-items:center;background:var(--green);color:#fff;width:25px;height:25px;border-radius:50%}.cal-task{border-left:3px solid var(--green);background:#eaf4f0;border-radius:6px;padding:6px 7px;margin:5px 0;font-size:11px;cursor:grab}.cal-task.submitted{border-color:var(--blue);background:#edf3fc;cursor:not-allowed}.cal-task.approved{border-color:#87968f;background:#f0f2f1;cursor:not-allowed}.cal-task.rejected{border-color:var(--red);background:#fff0f0}.cal-task b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.view-toggle{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:white}.view-toggle button{border:0;background:white;padding:9px 12px}.view-toggle button.active{background:var(--green2);color:var(--green);font-weight:800}.template-grid{grid-template-columns:repeat(3,1fr);margin-bottom:20px}.template-card{padding:19px;position:relative}.template-card h3{margin:9px 0 4px}.template-card p{color:var(--muted);min-height:42px}.template-meta{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}.chip{background:#eef4f1;border-radius:6px;padding:4px 8px;font-size:11px;color:#476057}.template-actions{display:flex;gap:7px;border-top:1px solid var(--line);padding-top:13px}.stepper{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:18px}.step{background:#edf2ef;border-radius:8px;padding:7px 10px;font-size:12px;font-weight:700}.step.on{background:var(--green2);color:var(--green)}.arrow{color:#9aa8a1}.config{max-width:820px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{display:grid;gap:6px}.field.full{grid-column:1/-1}.field label{font-weight:700;font-size:12px}.field input,.field select,.field textarea{border:1px solid var(--line);border-radius:9px;padding:10px 11px;background:white;width:100%}.field textarea{min-height:95px;resize:vertical}.help{font-size:11px;color:var(--muted)}
+    .modal-bg{position:fixed;inset:0;background:#0b1d1773;display:grid;place-items:center;z-index:20;padding:20px}.modal{background:white;border-radius:16px;width:min(650px,100%);max-height:90vh;overflow:auto;box-shadow:0 30px 80px #0004}.modal-head{padding:20px 23px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.modal-head h2{margin:0;font-size:19px}.modal-body{padding:22px}.modal-foot{padding:16px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:9px}.close{border:0;background:transparent;font-size:22px}.toast{position:fixed;right:24px;bottom:24px;background:#17362a;color:white;padding:12px 17px;border-radius:10px;z-index:40;box-shadow:var(--shadow);animation:in .2s}.comment-list{display:grid;gap:14px;max-height:360px;overflow:auto;padding:2px}.comment{display:grid;grid-template-columns:34px 1fr;gap:10px}.comment-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--green2);color:var(--green);font-size:11px;font-weight:900}.comment-bubble{background:#f5f8f6;border-radius:0 11px 11px 11px;padding:10px 12px}.comment-meta{display:flex;justify-content:space-between;gap:10px;margin-bottom:4px}.comment-meta small{color:var(--muted)}.comment p{margin:0;white-space:pre-wrap}.reply-link{border:0;background:transparent;color:var(--green);font-weight:750;padding:5px 0 0}.replying{background:#edf5f1;color:var(--green);padding:7px 10px;border-radius:7px;font-size:12px;margin-bottom:7px}.comment-compose{border-top:1px solid var(--line);margin-top:18px;padding-top:16px}.comment-count{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:10px;background:#e6f2ed;color:var(--green);font-size:11px;margin-left:4px}@keyframes in{from{transform:translateY(12px);opacity:0}}
+    @media(max-width:950px){.app{grid-template-columns:76px 1fr}.sidebar{padding:24px 10px}.brand{padding:0 8px 26px}.brand div:last-child,.nav-label,.nav button span:not(.ico),.side-foot{display:none}.nav button{justify-content:center}.dashboard-grid{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.content{padding:22px}.topbar{padding:0 22px}}
+    @media(max-width:620px){.app{display:block}.sidebar{position:fixed;left:0;right:0;bottom:0;top:auto;width:100%;height:64px;z-index:10;padding:7px;background:#102c22;overflow-x:auto}.sidebar-toggle{display:none}.brand,.nav-label,.side-foot,.nav .hide-mobile{display:none}.nav{display:flex;justify-content:space-around;gap:2px}.nav button{padding:8px;flex-direction:column;gap:3px;font-size:9px}.nav .ico{font-size:18px}.main{padding-bottom:64px}.topbar{height:62px}.crumb,.month{display:none}.content{padding:18px 14px}.heading{align-items:center}.heading h1{font-size:23px}.kpis,.report-grid,.form-grid{grid-template-columns:1fr}.dashboard-grid{grid-template-columns:1fr}.approval-card{grid-template-columns:1fr}.top-actions{gap:7px}th:nth-child(3),td:nth-child(3),th:nth-child(5),td:nth-child(5){display:none}}
+    @media print{.sidebar,.topbar,.toolbar,.heading .btn,.row-actions{display:none!important}.app{display:block}.content{padding:0}.view{display:none!important}.view.active{display:block!important}.card{box-shadow:none}}
+    @media(max-width:700px){#category-allocation .grid{grid-template-columns:1fr 1fr!important}}
+  
+    /* Hierarchy Filter Styles */
+    .hierarchy-filter{position:relative;min-width:280px}
+    .hierarchy-btn{display:flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--line);border-radius:9px;background:white;cursor:pointer;font-weight:600;width:100%}
+    .hierarchy-btn:hover{border-color:#9fc6b5;background:#fbfdfc}
+    .hierarchy-icon{font-size:16px}
+    .hierarchy-label{flex:1;text-align:left}
+    .hierarchy-count{background:var(--green2);color:var(--green);padding:2px 7px;border-radius:12px;font-size:11px;font-weight:800}
+    .hierarchy-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;background:white;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);max-height:420px;overflow:auto;z-index:10;display:none}
+    .hierarchy-dropdown.show{display:block}
+    .hierarchy-search{padding:12px;border-bottom:1px solid var(--line)}
+    .hierarchy-search input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:7px;font-size:13px}
+    .hierarchy-tree{padding:8px}
+    .hierarchy-node{padding:8px 10px;border-radius:7px;cursor:pointer;display:flex;align-items:center;gap:8px;margin:2px 0;transition:.12s}
+    .hierarchy-node:hover{background:var(--green2)}
+    .hierarchy-node.selected{background:var(--green2);color:var(--green);font-weight:700}
+    .hierarchy-node.disabled{opacity:.4;cursor:not-allowed}
+    .node-icon{width:18px;text-align:center;font-size:13px;color:var(--muted)}
+    .node-expand{width:16px;text-align:center;font-size:11px;cursor:pointer;color:var(--muted)}
+    .node-expand:hover{color:var(--green)}
+    .node-label{flex:1;font-size:13px}
+    .node-count{background:#f0f4f1;padding:2px 6px;border-radius:10px;font-size:10px;color:var(--muted);font-weight:700}
+    .node-children{margin-left:24px;display:none}
+    .node-children.show{display:block}
+    .hierarchy-breadcrumb{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+    .breadcrumb-item{font-size:13px;color:var(--muted);cursor:pointer}
+    .breadcrumb-item:hover{color:var(--green)}
+    .breadcrumb-item.active{color:var(--ink);font-weight:700;cursor:default}
+    .breadcrumb-sep{color:var(--muted);font-size:11px}
+    .hierarchy-info{background:var(--green2);border:1px solid #b8d9ca;border-radius:10px;padding:12px 14px;margin-bottom:16px;display:flex;align-items:start;gap:10px}
+    .hierarchy-info-icon{font-size:18px}
+    .hierarchy-info-text{flex:1;font-size:12px;line-height:1.5}
+    .hierarchy-info-text b{display:block;margin-bottom:4px;color:var(--green);font-size:13px}
+
+  
+    /* Dashboard Tabs */
+    .dashboard-tabs{display:flex;gap:4px;border-bottom:2px solid var(--line);margin-bottom:24px}
+    .dashboard-tab{padding:12px 20px;background:transparent;border:0;font-weight:700;color:var(--muted);cursor:pointer;position:relative;transition:.15s}
+    .dashboard-tab:hover{color:var(--ink);background:var(--green2)}
+    .dashboard-tab.active{color:var(--green);background:transparent}
+    .dashboard-tab.active:after{content:"";position:absolute;bottom:-2px;left:0;right:0;height:2px;background:var(--green)}
+    .dashboard-tab-content{display:none}
+    .dashboard-tab-content.active{display:block}
+
+  </style>
+</head>
+<body>
+<button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">☰</button>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="mark">S</div><div><strong>Sokrio</strong><small>Task Manager</small></div></div>
+    <div class="nav-label">Workspace</div>
+    <nav class="nav">
+      <button class="active" data-view="dashboard"><span class="ico">⌂</span><span>Overview</span></button>
+      <button data-view="tasks"><span class="ico">☷</span><span>My tasks</span></button>
+      <button data-view="team-dashboard" class="role-approver"><span class="ico">👥</span><span>Team Dashboard</span></button>
+      <button data-view="approvals" class="role-approver"><span class="ico">✓</span><span>Team plan reviews</span><i class="badge">2</i></button>
+      <button data-view="review"><span class="ico">◷</span><span>Progress & review</span></button>
+      <button data-view="reports"><span class="ico">▥</span><span>Reports</span></button>
+      <button data-view="user-report"><span class="ico">📋</span><span>User-wise Report</span></button>
+      <div class="nav-label hide-mobile">Manage</div>
+      <button data-view="users" class="role-admin hide-mobile hidden"><span class="ico">♙</span><span>Users & roles</span></button>
+      <button data-view="templates" class="role-admin hide-mobile hidden"><span class="ico">▤</span><span>Task types</span></button>
+      <button data-view="settings" class="role-admin hide-mobile hidden"><span class="ico">⚙</span><span>Configuration</span></button>
+    </nav>
+    <div class="side-foot"><b>Planning closes in 16 days</b><small>25 August, 11:59 PM</small></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div class="crumb">Sokrio / <b id="crumb">Overview</b></div><div class="top-actions"><select class="month"><option>September 2026</option><option>August 2026</option><option>July 2026</option></select><select class="role" id="role"><option>Supervisor</option><option>Approver</option><option>Admin</option><option>Viewer</option></select><button class="bell" aria-label="Notifications">♢</button><div class="avatar">MS</div></div></header>
+    <div class="content">
+      <section id="dashboard" class="view active">
+        <div class="heading">
+          <div>
+            <h1>Good morning, Mahmud</h1>
+            <p>Your workspace overview for September 2026.</p>
+          </div>
+          <button class="btn primary create-btn">＋ New task</button>
+        </div>
+
+        <!-- Dashboard Tabs -->
+        <div class="dashboard-tabs">
+          <button class="dashboard-tab active" onclick="switchDashboardTab('my-tasks')">
+            📊 My Tasks
+          </button>
+          <button class="dashboard-tab" onclick="switchDashboardTab('team')">
+            👥 Team Overview
+          </button>
+        </div>
+
+        <!-- My Tasks Tab Content -->
+        <div id="dashboard-my-tasks" class="dashboard-tab-content active">
+          <div class="grid kpis"><div class="card kpi"><div class="label">Awaiting approval</div><div class="num" id="kpi-pending">3</div><div class="muted">Decision due by Aug 28</div></div><div class="card kpi"><div class="label">Approved</div><div class="num" id="kpi-approved">7</div><div class="delta">58% of plan</div></div><div class="card kpi"><div class="label">Achievement rate</div><div class="num">88%</div><div class="delta">↑ 6% from July</div></div><div class="card kpi"><div class="label">Total tasks</div><div class="num" id="kpi-total">12</div><div class="muted">In September plan</div></div></div>
+        <div class="grid dashboard-grid"><div class="card pad"><div class="card-title"><h3>Plan by category</h3><span class="muted">12 tasks</span></div><div class="progress-row"><span>Field visit</span><div class="bar"><span style="width:82%"></span></div><b>5</b></div><div class="progress-row"><span>Sales</span><div class="bar"><span style="width:62%;background:#3971c7"></span></div><b>3</b></div><div class="progress-row"><span>Collection</span><div class="bar"><span style="width:40%;background:#e8a34b"></span></div><b>2</b></div><div class="progress-row"><span>Admin</span><div class="bar"><span style="width:23%;background:#8b79c6"></span></div><b>1</b></div></div><div class="card pad"><div class="card-title"><h3>Last month’s outcome</h3><button class="btn small" data-jump="reports">View report</button></div><div class="donut-wrap"><div class="donut"></div><div class="legend"><div><i class="dot" style="background:#0f6b4f"></i>Achieved</div><div><i class="dot" style="background:#f0aa5f"></i>Partial</div><div><i class="dot" style="background:#d65b5b"></i>Not achieved</div></div></div></div></div>
+        <div class="grid dashboard-grid"><div class="card pad"><div class="card-title"><h3>Tasks requiring attention</h3><button class="btn small" data-jump="tasks">View all</button></div><div class="list" id="attention-list"></div></div><div class="card pad"><div class="card-title"><h3>Cycle timeline</h3><span class="status approved">Planning open</span></div><div class="progress-row"><span>Planning</span><div class="bar"><span style="width:68%"></span></div><b>68%</b></div><p class="muted">Submit your plan by <b>25 August</b>. Approvals close 28 August. Execution begins 1 September.</p></div></div>
+        </div>
+
+        <!-- Team Tab Content -->
+        <div id="dashboard-team" class="dashboard-tab-content">
+          <!-- Hierarchy Filter Section -->
+          <div class="hierarchy-info">
+            <span class="hierarchy-info-icon">🏢</span>
+            <div class="hierarchy-info-text">
+              <b>Organization View Active</b>
+              Viewing: <b id="dashboard-team-scope">Dhaka Region (80 users)</b>. Switch between organizational levels to see team performance metrics.
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:center;margin-bottom:18px;flex-wrap:wrap">
+            <!-- Hierarchy Filter Dropdown -->
+            <div class="hierarchy-filter">
+              <button class="hierarchy-btn" onclick="toggleDashboardHierarchy(event)">
+                <span class="hierarchy-icon">🏢</span>
+                <span class="hierarchy-label" id="dashboard-hierarchy-label">Dhaka Region</span>
+                <span class="hierarchy-count" id="dashboard-hierarchy-count">80</span>
+                <span style="color:var(--muted);font-size:12px">▼</span>
+              </button>
+              <div class="hierarchy-dropdown" id="dashboard-hierarchy-dropdown">
+                <div class="hierarchy-search">
+                  <input type="text" placeholder="Search organization..." onkeyup="filterDashboardHierarchy(event)">
+                </div>
+                <div class="hierarchy-tree" id="dashboard-hierarchy-tree"></div>
+              </div>
+            </div>
+
+            <!-- Breadcrumb -->
+            <div class="hierarchy-breadcrumb" id="dashboard-breadcrumb">
+              <span class="breadcrumb-item">Bangladesh</span>
+              <span class="breadcrumb-sep">›</span>
+              <span class="breadcrumb-item active">Dhaka Region</span>
+            </div>
+          </div>
+
+          <!-- Team KPIs -->
+          <div class="grid kpis">
+            <div class="card kpi">
+              <div class="label">Total Team Members</div>
+              <div class="num" id="dashboard-team-total">80</div>
+              <div class="muted">In selected scope</div>
+            </div>
+            <div class="card kpi" style="background:#e1f2e9">
+              <div class="label">Plans Submitted</div>
+              <div class="num" style="color:#0f6b4f" id="dashboard-team-submitted">52</div>
+              <div class="delta" style="color:#0f6b4f" id="dashboard-team-submitted-pct">✓ 65% completion</div>
+            </div>
+            <div class="card kpi" style="background:#fff0df">
+              <div class="label">Pending Submission</div>
+              <div class="num" style="color:#e38b39" id="dashboard-team-pending">28</div>
+              <div class="muted">Need to submit</div>
+            </div>
+            <div class="card kpi">
+              <div class="label">Avg Team Achievement</div>
+              <div class="num" id="dashboard-team-achievement">82%</div>
+              <div class="delta">Last month performance</div>
+            </div>
+          </div>
+
+          <!-- Team Performance Charts -->
+          <div class="grid dashboard-grid" style="margin-top:18px">
+            <div class="card pad">
+              <div class="card-title">
+                <h3>Submission Status by Area</h3>
+                <span class="muted">Real-time tracking</span>
+              </div>
+              <div class="progress-row">
+                <span>Gulshan Area</span>
+                <div class="bar"><span style="width:88%"></span></div>
+                <b>88%</b>
+              </div>
+              <div class="progress-row">
+                <span>Banani Area</span>
+                <div class="bar"><span style="width:72%;background:#3971c7"></span></div>
+                <b>72%</b>
+              </div>
+              <div class="progress-row">
+                <span>Uttara Area</span>
+                <div class="bar"><span style="width:45%;background:#e8a34b"></span></div>
+                <b>45%</b>
+              </div>
+            </div>
+
+            <div class="card pad">
+              <div class="card-title">
+                <h3>Team Achievement Distribution</h3>
+                <button class="btn small" onclick="document.querySelector('[data-view=team-dashboard]').click()">View details</button>
+              </div>
+              <div class="donut-wrap">
+                <div class="donut" style="background:conic-gradient(var(--green) 0 65%,#f0aa5f 65% 82%,#d65b5b 82% 92%,#dce4df 92%)"></div>
+                <div class="legend">
+                  <div><i class="dot" style="background:#0f6b4f"></i>High (>85%): 52</div>
+                  <div><i class="dot" style="background:#f0aa5f"></i>Medium (70-85%): 14</div>
+                  <div><i class="dot" style="background:#d65b5b"></i>Low (<70%): 8</div>
+                  <div><i class="dot" style="background:#dce4df"></i>No data: 6</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="card pad" style="margin-top:18px">
+            <div class="card-title">
+              <h3>Quick Team Actions</h3>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px">
+              <button class="btn" onclick="document.querySelector('[data-view=team-dashboard]').click()">
+                📊 View Team Dashboard
+              </button>
+              <button class="btn" onclick="document.querySelector('[data-view=approvals]').click()">
+                ✓ Review Pending Plans
+              </button>
+              <button class="btn" onclick="toast('Reminders sent to 28 pending members')">
+                📧 Send Submission Reminder
+              </button>
+              <button class="btn" onclick="document.querySelector('[data-view=user-report]').click()">
+                📋 Export Team Report
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="team-dashboard" class="view"><div class="heading"><div><h1>Team Submission Dashboard</h1><p>Track your team's September plan submission status and performance.</p></div><div class="hierarchy-info"><span class="hierarchy-info-icon">🏢</span><div class="hierarchy-info-text"><b>Organization Filter Active</b>Viewing: <b>Dhaka Region (80 users)</b>. All data on this page shows only users within selected scope. <a href="#" style="color:var(--green);font-weight:700">Change scope →</a></div></div></div><div style="display:flex;gap:12px;align-items:center;margin-bottom:18px">
+<div class="hierarchy-filter">
+  <button class="hierarchy-btn" onclick="toggleHierarchyDropdown(event)">
+    <span class="hierarchy-icon">🏢</span>
+    <span class="hierarchy-label" id="hierarchy-label">Dhaka Region</span>
+    <span class="hierarchy-count" id="hierarchy-count">80</span>
+    <span style="color:var(--muted);font-size:12px">▼</span>
+  </button>
+  <div class="hierarchy-dropdown" id="hierarchy-dropdown">
+    <div class="hierarchy-search">
+      <input type="text" placeholder="Search organization..." onkeyup="filterHierarchy(event)">
+    </div>
+    <div class="hierarchy-tree" id="hierarchy-tree"></div>
+  </div>
+</div>
+<div class="hierarchy-breadcrumb"><span class="breadcrumb-item">Bangladesh</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-item active">Dhaka Region</span></div></div><div class="grid kpis"><div class="card kpi"><div class="label">Total Team Members</div><div class="num">12</div><div class="muted">Direct reports</div></div><div class="card kpi" style="background:#e1f2e9"><div class="label">Submitted</div><div class="num" style="color:#0f6b4f">8</div><div class="delta" style="color:#0f6b4f">✓ 67% completion</div></div><div class="card kpi" style="background:#fff0df"><div class="label">Not Submitted</div><div class="num" style="color:#e38b39">4</div><div class="muted">Pending submission</div></div><div class="card kpi"><div class="label">Avg Achievement</div><div class="num">82%</div><div class="delta">↑ 4% from last month</div></div></div><div class="card pad" style="margin-top:18px"><div class="card-title"><h3>Submission Status Overview</h3><button class="btn small" onclick="toast('Reminder sent to pending members')">📧 Send Reminder</button></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px"><div><h4 style="margin:0 0 12px;color:var(--green)">✓ Submitted (8)</h4><div class="list" style="gap:6px"><div class="task-mini"><div><b>Ravi Kumar</b><small>12 tasks · 2 days ago</small></div><span class="status approved">Submitted</span></div><div class="task-mini"><div><b>Nadia Rahman</b><small>15 tasks · 3 days ago</small></div><span class="status approved">Submitted</span></div><div class="task-mini"><div><b>Tanvir Ahmed</b><small>9 tasks · 5 days ago</small></div><span class="status approved">Submitted</span></div><div class="task-mini"><div><b>Sadia Islam</b><small>11 tasks · 1 day ago</small></div><span class="status approved">Submitted</span></div><div class="task-mini"><div><b>Farhan Ali</b><small>13 tasks · 4 days ago</small></div><span class="status approved">Submitted</span></div><div class="task-mini"><div><b>Ayesha Khan</b><small>10 tasks · 3 days ago</small></div><span class="status approved">Submitted</span></div><div class="task-mini"><div><b>Imran Hossain</b><small>14 tasks · 6 days ago</small></div><span class="status approved">Submitted</span></div><div class="task-mini"><div><b>Zara Begum</b><small>8 tasks · 2 days ago</small></div><span class="status approved">Submitted</span></div></div></div><div><h4 style="margin:0 0 12px;color:var(--orange)">⏳ Pending (4)</h4><div class="list" style="gap:6px"><div class="task-mini"><div><b>Karim Ahmed</b><small>Last activity: 3 days ago</small></div><span class="status draft">Draft</span></div><div class="task-mini"><div><b>Rahul Sharma</b><small>Last activity: 5 days ago</small></div><span class="status draft">Draft</span></div><div class="task-mini"><div><b>Priya Das</b><small>Last activity: 1 day ago</small></div><span class="status draft">Draft</span></div><div class="task-mini"><div><b>Ahmed Hassan</b><small>No activity yet</small></div><span class="status rejected" style="background:#fae8e8">Not Started</span></div></div><div style="margin-top:12px;padding:12px;background:#fff7e9;border:1px solid #e6a44c;border-radius:10px"><b style="color:#ad672b">⚠️ Deadline: Aug 25, 2026</b><p style="margin:5px 0 0;font-size:12px;color:#65756d">5 days remaining for submission</p></div></div></div></div><div class="card table-card" style="margin-top:18px"><div class="pad card-title"><h3>User-Wise Target & Achievement Report</h3><div class="toolbar" style="margin:0;gap:8px"><input type="search" placeholder="Search employee..." style="padding:8px 12px;border:1px solid var(--line);border-radius:8px;width:220px"><select class="filter"><option>All team members</option><option>Submitted only</option><option>Pending only</option></select><button class="btn small">⇩ Export Excel</button></div></div><table><thead><tr><th>Employee</th><th>Submission</th><th>Target Tasks</th><th>Last Month Approved</th><th>Last Month Achieved</th><th>Achievement %</th><th>Trend</th><th></th></tr></thead><tbody><tr style="cursor:pointer" onclick="openUserDetail('Ravi Kumar')"><td><div class="person"><div class="avatar" style="width:34px;height:34px;font-size:12px">RK</div><div><div class="task-name">Ravi Kumar</div><small class="muted">Field Sales · SO</small></div></div></td><td><span class="status approved">Submitted</span><small class="muted" style="display:block;margin-top:2px">Aug 18, 2026</small></td><td><b>12</b> tasks<div class="bar tinybar" style="margin-top:4px"><span style="width:75%"></span></div></td><td><b>10</b> tasks</td><td><b>9</b> tasks</td><td><div style="display:flex;align-items:center;gap:8px"><div class="bar" style="width:70px"><span style="width:90%"></span></div><b style="color:var(--green)">90%</b></div></td><td><span style="color:var(--green)">↑ 5%</span></td><td><button class="icon-btn" title="View details">👁</button><button class="icon-btn" title="Message">💬</button></td></tr><tr style="cursor:pointer" onclick="openUserDetail('Nadia Rahman')"><td><div class="person"><div class="avatar" style="width:34px;height:34px;font-size:12px">NR</div><div><div class="task-name">Nadia Rahman</div><small class="muted">Field Sales · ASE</small></div></div></td><td><span class="status approved">Submitted</span><small class="muted" style="display:block;margin-top:2px">Aug 17, 2026</small></td><td><b>15</b> tasks<div class="bar tinybar" style="margin-top:4px"><span style="width:94%"></span></div></td><td><b>14</b> tasks</td><td><b>13</b> tasks</td><td><div style="display:flex;align-items:center;gap:8px"><div class="bar" style="width:70px"><span style="width:93%"></span></div><b style="color:var(--green)">93%</b></div></td><td><span style="color:var(--green)">↑ 8%</span></td><td><button class="icon-btn" title="View details">👁</button><button class="icon-btn" title="Message">💬</button></td></tr><tr style="cursor:pointer" onclick="openUserDetail('Tanvir Ahmed')"><td><div class="person"><div class="avatar" style="width:34px;height:34px;font-size:12px">TA</div><div><div class="task-name">Tanvir Ahmed</div><small class="muted">Field Sales · SO</small></div></div></td><td><span class="status approved">Submitted</span><small class="muted" style="display:block;margin-top:2px">Aug 15, 2026</small></td><td><b>9</b> tasks<div class="bar tinybar" style="margin-top:4px"><span style="width:56%"></span></div></td><td><b>8</b> tasks</td><td><b>6</b> tasks</td><td><div style="display:flex;align-items:center;gap:8px"><div class="bar" style="width:70px"><span style="width:75%"></span></div><b style="color:var(--orange)">75%</b></div></td><td><span style="color:var(--red)">↓ 3%</span></td><td><button class="icon-btn" title="View details">👁</button><button class="icon-btn" title="Message">💬</button></td></tr><tr style="cursor:pointer" onclick="openUserDetail('Sadia Islam')"><td><div class="person"><div class="avatar" style="width:34px;height:34px;font-size:12px">SI</div><div><div class="task-name">Sadia Islam</div><small class="muted">Field Sales · ASM</small></div></div></td><td><span class="status approved">Submitted</span><small class="muted" style="display:block;margin-top:2px">Aug 19, 2026</small></td><td><b>11</b> tasks<div class="bar tinybar" style="margin-top:4px"><span style="width:69%"></span></div></td><td><b>10</b> tasks</td><td><b>9</b> tasks</td><td><div style="display:flex;align-items:center;gap:8px"><div class="bar" style="width:70px"><span style="width:90%"></span></div><b style="color:var(--green)">90%</b></div></td><td><span style="color:var(--green)">↑ 2%</span></td><td><button class="icon-btn" title="View details">👁</button><button class="icon-btn" title="Message">💬</button></td></tr><tr style="cursor:pointer;background:#fff8f8" onclick="openUserDetail('Karim Ahmed')"><td><div class="person"><div class="avatar" style="width:34px;height:34px;font-size:12px">KA</div><div><div class="task-name">Karim Ahmed</div><small class="muted">Field Sales · SO</small></div></div></td><td><span class="status draft">Draft</span><small class="muted" style="display:block;margin-top:2px;color:var(--orange)">Pending</small></td><td><b>0</b> tasks<div class="bar tinybar" style="margin-top:4px"><span style="width:0%"></span></div></td><td><b>12</b> tasks</td><td><b>10</b> tasks</td><td><div style="display:flex;align-items:center;gap:8px"><div class="bar" style="width:70px"><span style="width:83%"></span></div><b>83%</b></div></td><td><span style="color:var(--muted)">--</span></td><td><button class="icon-btn" title="Send reminder" style="color:var(--orange)">📧</button><button class="icon-btn" title="Message">💬</button></td></tr><tr style="cursor:pointer;background:#fff8f8" onclick="openUserDetail('Ahmed Hassan')"><td><div class="person"><div class="avatar" style="width:34px;height:34px;font-size:12px">AH</div><div><div class="task-name">Ahmed Hassan</div><small class="muted">Field Sales · ASE</small></div></div></td><td><span class="status rejected" style="background:#fae8e8">Not Started</span><small class="muted" style="display:block;margin-top:2px;color:var(--red)">No activity</small></td><td><b>0</b> tasks<div class="bar tinybar" style="margin-top:4px"><span style="width:0%"></span></div></td><td><b>11</b> tasks</td><td><b>8</b> tasks</td><td><div style="display:flex;align-items:center;gap:8px"><div class="bar" style="width:70px"><span style="width:73%"></span></div><b>73%</b></div></td><td><span style="color:var(--muted)">--</span></td><td><button class="icon-btn" title="Send reminder" style="color:var(--red)">📧</button><button class="icon-btn" title="Message">💬</button></td></tr></tbody></table></div></section>
+      <section id="tasks" class="view"><div class="heading"><div><h1>September monthly plan</h1><p>Build the full month in one workspace, then submit it together.</p></div><div class="approval-actions"><button class="btn" onclick="openSavedPlans()">▤ Use saved plan</button><button class="btn" onclick="openCopyMonth()">↻ Copy August plan</button><button class="btn primary create-btn">＋ Add one task</button></div></div><div class="card pad" style="margin-bottom:16px"><div class="plan-head"><div><b>Plan status: Draft in progress</b><p class="muted" style="margin:3px 0 0">Drag Draft tasks to another calendar date when plans change.</p></div><div class="approval-actions"><button class="btn small" onclick="saveMonthlyPlan()">☆ Save plan for reuse</button><button class="btn primary small" onclick="submitMonthlyPlan()">Submit full plan</button></div></div></div><div class="toolbar"><div class="search"><span>⌕</span><input id="task-search" placeholder="Search title or description"></div><select class="filter" id="status-filter"><option value="">All statuses</option><option>Draft</option><option>Submitted</option><option>Approved</option><option>Rejected</option></select><select class="filter" id="category-filter"><option value="">All categories</option><option>Sales</option><option>Field Visit</option><option>Collection</option><option>Admin</option><option>Service</option><option>Other</option></select><div class="view-toggle"><button id="list-toggle" class="active" onclick="togglePlanView('list')">☷ List</button><button id="calendar-toggle" onclick="togglePlanView('calendar')">▦ Calendar</button></div></div><div id="plan-list" class="card table-card"><table><thead><tr><th>Task</th><th>Status</th><th>Category</th><th>Priority</th><th>Due date</th><th>Progress</th><th></th></tr></thead><tbody id="task-body"></tbody></table><div id="task-empty" class="empty hidden">No tasks match these filters.</div></div><div id="plan-calendar" class="hidden"><div class="calendar" id="calendar-grid"></div><p class="help" style="margin-top:10px">Only your Draft and Returned tasks can be moved. Submitted and Approved tasks are locked.</p></div></section>
+      <section id="approvals" class="view"><div class="heading"><div><h1>Team plan reviews</h1><p>Review plans or assign a new task to one of your direct reports.</p></div><div class="approval-actions"><button class="btn primary" onclick="openAssignTeamTask()">＋ Assign task</button><button class="btn" onclick="resetDemo()">↻ Reset sample data</button><span class="status draft" id="plan-count">3 plans need review</span></div></div><div id="approval-list"></div></section>
+      <section id="review" class="view"><div class="heading"><div><h1>Progress & achievement</h1><p>Track your own work or review progress across your team.</p></div></div><div class="toolbar"><div class="search"><span>⌕</span><input id="review-search" placeholder="Search tasks or employee"></div><select class="filter" id="review-owner"><option value="">All team members</option><option value="Mahmud Sahiuddin">My tasks — Mahmud</option></select><select class="filter" id="review-outcome"><option value="">All outcomes</option><option value="Achieved">Achieved</option><option value="Partially Achieved">Partially achieved</option><option value="Not Achieved">Not achieved</option></select></div><div class="card table-card"><table><thead><tr><th>Task</th><th>Employee</th><th>Status</th><th>Progress</th><th>Final outcome</th><th></th></tr></thead><tbody id="review-body"></tbody></table><div id="review-empty" class="empty hidden">No approved tasks match these filters.</div></div></section>
+      <section id="reports" class="view"><div class="heading"><div><h1>Plan vs achievement</h1><p>August 2026 cycle performance summary.</p></div><button class="btn" onclick="window.print()">⇩ Export / print</button></div><div class="grid report-grid"><div class="card report-stat"><span>Approved tasks</span><b>10</b><small class="muted">Final plan</small></div><div class="card report-stat"><span>Achieved or partial</span><b style="color:var(--green)">8</b><small class="muted">8 of 10 tasks</small></div><div class="card report-stat"><span>Achievement rate</span><b>80%</b><small class="delta">Target: 75% · above target</small></div></div><div class="grid dashboard-grid"><div class="card pad"><div class="card-title"><h3>Outcome breakdown</h3></div><div class="donut-wrap"><div class="donut" style="background:conic-gradient(var(--green) 0 60%,#f0aa5f 60% 80%,#d65b5b 80%)"></div><div class="legend"><div><i class="dot" style="background:#0f6b4f"></i>6 Achieved</div><div><i class="dot" style="background:#f0aa5f"></i>2 Partial</div><div><i class="dot" style="background:#d65b5b"></i>2 Not achieved</div></div></div></div><div class="card pad"><div class="card-title"><h3>Category performance</h3></div><div class="progress-row"><span>Sales</span><div class="bar"><span style="width:92%"></span></div><b>92%</b></div><div class="progress-row"><span>Field visit</span><div class="bar"><span style="width:84%"></span></div><b>84%</b></div><div class="progress-row"><span>Collection</span><div class="bar"><span style="width:70%"></span></div><b>70%</b></div></div></div></section>
+      <section id="user-report" class="view"><div class="heading"><div><h1>User-Wise Task Report</h1><p>Detailed task report grouped by user with dates, remarks, and attachments.</p></div><div class="approval-actions"><select class="month"><option>September 2026</option><option>August 2026</option><option>July 2026</option></select><button class="btn" onclick="exportUserReport('excel')">⇩ Export Excel</button><button class="btn" onclick="exportUserReport('pdf')">⇩ Export PDF</button><button class="btn" onclick="window.print()">🖨 Print</button></div></div><div class="card pad" style="margin-bottom:16px"><div class="plan-head"><div><div><b>Report Summary</b><small class="muted" style="display:block">September 2026 cycle</small></div></div><div class="approval-actions"><span class="status approved">Total Users: 4</span><span class="status">Total Tasks: 13</span><span class="status approved">Completed: 8 (62%)</span><span class="status draft">Pending: 5</span></div></div></div><div class="toolbar"><div class="search"><span>⌕</span><input id="user-report-search" placeholder="Search user or task..." onkeyup="filterUserReport()"></div><select class="filter" id="user-report-status" onchange="filterUserReport()"><option value="">All statuses</option><option>Completed</option><option>Pending</option><option>In Progress</option></select><select class="filter" id="user-report-category" onchange="filterUserReport()"><option value="">All categories</option><option>Field Visit</option><option>Sales</option><option>Collection</option><option>Admin</option></select><select class="filter" id="user-report-sort" onchange="filterUserReport()"><option value="due">Sort by: Due Date</option><option value="created">Sort by: Created Date</option><option value="priority">Sort by: Priority</option><option value="status">Sort by: Status</option></select></div><div class="card table-card"><table><thead><tr><th>User</th><th>Task</th><th>Category</th><th>Priority</th><th>Status</th><th>Created Date</th><th>Due Date</th><th>Completed Date</th><th>Remarks</th><th>Attachments</th></tr></thead><tbody id="user-report-table"></tbody></table><div id="user-report-empty" class="empty hidden">No tasks match these filters.</div></div></section>
+      <section id="users" class="view"><div class="heading"><div><h1>Users & roles</h1><p>Manage access and department scope.</p></div><button class="btn primary" onclick="toast('Demo: user invitation created')">＋ Invite user</button></div><div class="card table-card"><table><thead><tr><th>User</th><th>Role</th><th>Department</th><th>Status</th></tr></thead><tbody><tr><td><b>Mahmud Sahiuddin</b><small class="muted"><br>mahmud@sokrio.com</small></td><td>Admin</td><td>Platform</td><td><span class="status approved">Active</span></td></tr><tr><td><b>Ravi Kumar</b><small class="muted"><br>ravi@sokrio.com</small></td><td>Supervisor</td><td>Field Sales</td><td><span class="status approved">Active</span></td></tr><tr><td><b>Meera Shah</b><small class="muted"><br>meera@sokrio.com</small></td><td>Approver</td><td>Field Sales</td><td><span class="status approved">Active</span></td></tr></tbody></table></div></section>
+      <section id="templates" class="view"><div class="heading"><div><h1>Task type catalogue</h1><p>Admin defines reusable task types; employees propose the actual plan details.</p></div><button class="btn primary" onclick="openTaskTypeBuilder()">＋ New task type</button></div><div class="grid kpis"><div class="card kpi"><div class="label">Active task types</div><div class="num">40</div><div class="muted">Available in monthly planning</div></div><div class="card kpi"><div class="label">Daily types</div><div class="num">17</div><div class="muted">Field and operational work</div></div><div class="card kpi"><div class="label">Weekly types</div><div class="num">9</div><div class="muted">Reviews and analysis</div></div><div class="card kpi"><div class="label">Monthly types</div><div class="num">14</div><div class="muted">Meetings and closing work</div></div></div><div class="card table-card" style="margin-top:20px"><div class="pad card-title"><div><h3>Configured task types</h3><small class="muted">Dates, locations, routes, distributors, people, and targets are entered by the employee during planning.</small></div><select class="filter"><option>All frequencies</option><option>Daily</option><option>Weekly</option><option>Monthly</option></select></div><table><thead><tr><th>Task type</th><th>Frequency</th><th>Available to</th><th>Description</th><th>Status</th><th></th></tr></thead><tbody><tr><td><b>Dealer Point Visit</b></td><td>Daily</td><td>ASM</td><td>Visit and review a distributor/dealer point</td><td><span class="status approved">Active</span></td><td><button class="btn small" onclick="openTaskTypeBuilder('Dealer Point Visit')">Edit</button></td></tr><tr><td><b>New Outlet Coverage</b></td><td>Daily</td><td>SO, ASE</td><td>Plan coverage of new outlets in a proposed route</td><td><span class="status approved">Active</span></td><td><button class="btn small" onclick="openTaskTypeBuilder('New Outlet Coverage')">Edit</button></td></tr><tr><td><b>Weekly Sales Analysis</b></td><td>Weekly</td><td>ASM, SO, ASE</td><td>Review weekly performance and propose actions</td><td><span class="status approved">Active</span></td><td><button class="btn small" onclick="openTaskTypeBuilder('Weekly Sales Analysis')">Edit</button></td></tr><tr><td><b>Distributor Meeting</b></td><td>Monthly</td><td>All field roles</td><td>Plan a monthly distributor discussion</td><td><span class="status approved">Active</span></td><td><button class="btn small" onclick="openTaskTypeBuilder('Distributor Meeting')">Edit</button></td></tr><tr><td><b>Task Planning (PJP)</b></td><td>Monthly</td><td>All field roles</td><td>Prepare and submit the next monthly plan</td><td><span class="status approved">Active</span></td><td><button class="btn small" onclick="openTaskTypeBuilder('Task Planning (PJP)')">Edit</button></td></tr></tbody></table></div></section>
+      <section id="settings" class="view"><div class="heading"><div><h1>Configuration</h1><p>Manage cycle rules and the task-category catalogue.</p></div></div><div class="card pad config"><div class="form-grid"><div class="field"><label>Planning starts</label><select><option>Day 1</option></select></div><div class="field"><label>Planning & submission ends</label><select><option>Day 25</option></select></div><div class="field"><label>Approval ends</label><select><option>Day 28</option></select></div><div class="field"><label>Review window</label><select><option>Day 1–5 of following month</option></select></div><div class="field full"><label>Organisation timezone</label><select><option>Asia/Dhaka (GMT+6)</option><option>Asia/Kolkata (GMT+5:30)</option></select><span class="help">Cycle deadlines use this timezone.</span></div><div class="field full"><button class="btn primary" onclick="toast('Cycle configuration saved')">Save cycle configuration</button></div></div></div><div class="card table-card config" style="margin-top:18px"><div class="pad card-title"><div><h3>Task categories</h3><small class="muted">Categories identify the business purpose of a task and drive filtering and reports.</small></div><button class="btn primary small" onclick="openCategoryBuilder()">＋ New category</button></div><table><thead><tr><th>Category</th><th>Code</th><th>Colour</th><th>Used by</th><th>Status</th><th></th></tr></thead><tbody><tr><td><b>Sales</b></td><td>SALES</td><td><i class="dot" style="background:#3971c7"></i>Blue</td><td>All field roles</td><td><span class="status approved">Active</span></td><td><button class="btn small" onclick="openCategoryBuilder('Sales')">Edit</button></td></tr><tr><td><b>Field Visit</b></td><td>FIELD_VISIT</td><td><i class="dot" style="background:#0f6b4f"></i>Green</td><td>SO, ASE, ASM, RSM</td><td><span class="status approved">Active</span></td><td><button class="btn small" onclick="openCategoryBuilder('Field Visit')">Edit</button></td></tr><tr><td><b>Collection</b></td><td>COLLECTION</td><td><i class="dot" style="background:#e38b39"></i>Orange</td><td>SO, ASE, ASM</td><td><span class="status approved">Active</span></td><td><button class="btn small" onclick="openCategoryBuilder('Collection')">Edit</button></td></tr><tr><td><b>Admin</b></td><td>ADMIN</td><td><i class="dot" style="background:#8b79c6"></i>Purple</td><td>All roles</td><td><span class="status approved">Active</span></td><td><button class="btn small" onclick="openCategoryBuilder('Admin')">Edit</button></td></tr><tr><td><b>Service</b></td><td>SERVICE</td><td><i class="dot" style="background:#c34b4b"></i>Red</td><td>Field roles</td><td><span class="status approved">Active</span></td><td><button class="btn small" onclick="openCategoryBuilder('Service')">Edit</button></td></tr><tr><td><b>Other</b></td><td>OTHER</td><td><i class="dot" style="background:#87968f"></i>Grey</td><td>All roles</td><td><span class="status approved">Active</span></td><td><button class="btn small" onclick="openCategoryBuilder('Other')">Edit</button></td></tr></tbody></table></div></section>
+    </div>
+  </main>
+</div>
+<div id="modal-root"></div>
+<script>
+const seed=[
+ {id:1,title:'Visit top 50 retail outlets',desc:'Complete priority outlet coverage across Gulshan, Banani, and Uttara.',status:'Submitted',category:'Field Visit',priority:'High',due:'Sep 25',progress:0,owner:'Ravi Kumar'},
+ {id:2,title:'Launch festive sales campaign',desc:'Coordinate launch materials, retailer communication, and daily sales tracking.',status:'Submitted',category:'Sales',priority:'Critical',due:'Sep 10',progress:0,owner:'Ravi Kumar'},
+ {id:3,title:'Recover overdue collections',desc:'Follow up the top 20 overdue accounts and recover at least BDT 1.2M.',status:'Submitted',category:'Collection',priority:'High',due:'Sep 28',progress:0,owner:'Ravi Kumar'},
+ {id:4,title:'Train new field representatives',desc:'Run two product and route-planning sessions for recently joined representatives.',status:'Submitted',category:'Admin',priority:'Medium',due:'Sep 08',progress:0,owner:'Ravi Kumar'},
+ {id:5,title:'Onboard two new distributors',desc:'Complete due diligence, agreements, territory mapping, and opening orders.',status:'Submitted',category:'Sales',priority:'High',due:'Sep 18',progress:0,owner:'Nadia Rahman'},
+ {id:6,title:'Outlet merchandising audit',desc:'Audit POS materials and shelf visibility across 80 central-territory outlets.',status:'Submitted',category:'Field Visit',priority:'Medium',due:'Sep 22',progress:0,owner:'Nadia Rahman'},
+ {id:7,title:'Resolve distributor service tickets',desc:'Close all tickets older than seven days and publish root-cause notes.',status:'Submitted',category:'Service',priority:'Critical',due:'Sep 12',progress:0,owner:'Nadia Rahman'},
+ {id:8,title:'Prepare weekly collection forecast',desc:'Submit a rolling four-week collection forecast every Monday.',status:'Submitted',category:'Collection',priority:'Medium',due:'Sep 30',progress:0,owner:'Nadia Rahman'},
+ {id:9,title:'Reactivate dormant outlets',desc:'Visit 30 dormant outlets and reactivate at least 15 through new orders.',status:'Submitted',category:'Sales',priority:'High',due:'Sep 26',progress:0,owner:'Tanvir Ahmed'},
+ {id:10,title:'Map uncovered market pockets',desc:'Identify uncovered clusters and propose routes with outlet potential.',status:'Submitted',category:'Field Visit',priority:'Medium',due:'Sep 20',progress:0,owner:'Tanvir Ahmed'},
+ {id:11,title:'Competitor price survey',desc:'Collect and verify competitor price and promotion data from 40 outlets.',status:'Submitted',category:'Field Visit',priority:'Low',due:'Sep 15',progress:0,owner:'Tanvir Ahmed'},
+ {id:12,title:'September route-plan review',desc:'Validate daily routes and balance representative workloads before execution.',status:'Approved',category:'Admin',priority:'Medium',due:'Sep 05',progress:85,owner:'Sadia Islam'},
+ {id:13,title:'Key account growth plan',desc:'Prepare Q4 growth plans for ten strategic accounts.',status:'Approved',category:'Sales',priority:'High',due:'Sep 29',progress:62,owner:'Sadia Islam'},
+ {id:14,title:'Update outlet contact records',desc:'Validate decision-maker names and phone numbers for assigned outlets.',status:'Draft',category:'Admin',priority:'Low',due:'Sep 30',progress:0,owner:'Mahmud Sahiuddin'},
+ {id:15,title:'Review northern territory target',desc:'Revise the volume target using the latest distributor capacity data.',status:'Rejected',category:'Sales',priority:'Medium',due:'Sep 18',progress:0,owner:'Mahmud Sahiuddin',reason:'Target assumptions need supporting distributor data.'},
+ {id:16,title:'Complete priority outlet coverage',desc:'Finish the approved August outlet-coverage plan.',status:'Approved',category:'Field Visit',priority:'High',due:'Aug 25',progress:100,owner:'Ravi Kumar'},
+ {id:17,title:'Close overdue service tickets',desc:'Resolve the approved set of distributor service issues.',status:'Approved',category:'Service',priority:'Critical',due:'Aug 22',progress:45,owner:'Nadia Rahman'},
+ {id:18,title:'Activate new retail cluster',desc:'Open and service the Mirpur retail cluster.',status:'Approved',category:'Sales',priority:'High',due:'Aug 28',progress:0,owner:'Tanvir Ahmed'},
+ {id:19,title:'Publish team coaching schedule',desc:'Complete coaching calendar and session assignments.',status:'Approved',category:'Admin',priority:'Medium',due:'Aug 12',progress:75,owner:'Mahmud Sahiuddin'},
+ {id:20,title:'Complete key-account review',desc:'Review performance and growth actions for priority accounts.',status:'Approved',category:'Sales',priority:'Medium',due:'Aug 29',progress:30,owner:'Sadia Islam'}
+];
+const sampleComments={1:[{id:101,author:'Ravi Kumar',role:'Team Member',text:'I grouped the visits by territory to reduce travel time. Please review the Uttara allocation.',time:'Today, 9:12 AM'},{id:102,author:'Mahmud Sahiuddin',role:'Supervisor',text:'The allocation looks reasonable. Please confirm that the top 10 outlets are included.',time:'Today, 9:34 AM',replyTo:101}],2:[{id:103,author:'Mahmud Sahiuddin',role:'Supervisor',text:'Are the launch materials confirmed for delivery by 5 September?',time:'Yesterday, 4:20 PM'},{id:104,author:'Ravi Kumar',role:'Team Member',text:'Yes. Marketing confirmed delivery on 3 September, leaving two days for distribution.',time:'Yesterday, 4:42 PM',replyTo:103}],5:[{id:105,author:'Nadia Rahman',role:'Team Member',text:'Both candidates passed the credit and territory checks. Agreements are attached in the source system.',time:'Today, 10:05 AM'}],7:[{id:106,author:'Mahmud Sahiuddin',role:'Supervisor',text:'Please prioritise the six tickets affecting order placement.',time:'Today, 11:18 AM'}],9:[{id:107,author:'Tanvir Ahmed',role:'Team Member',text:'The list contains 18 outlets inactive for more than three months.',time:'Yesterday, 2:15 PM'}]};
+const sampleSubtasks={1:[{id:201,title:'Finalise priority outlet list',done:true},{id:202,title:'Confirm route allocation with MDRs',done:true},{id:203,title:'Complete outlet visits',done:false},{id:204,title:'Submit visit summary',done:false}],12:[{id:205,title:'Collect route plans',done:true},{id:206,title:'Check workload conflicts',done:true},{id:207,title:'Publish final schedule',done:true}],13:[{id:208,title:'Collect account performance data',done:true},{id:209,title:'Meet key account owners',done:false},{id:210,title:'Document Q4 actions',done:false}],19:[{id:211,title:'Confirm coaching topics',done:true},{id:212,title:'Assign trainers',done:true},{id:213,title:'Publish calendar',done:false},{id:214,title:'Notify participants',done:false}]};
+const userReportData=[
+{user:'Ravi Kumar',role:'SO',dept:'Field Sales',initials:'RK',tasks:[
+{id:1,title:'Priority Outlet Visit - Route 01',category:'Field Visit',priority:'High',status:'Completed',created:'2026-08-10T10:30:00',due:'2026-09-15',completed:'2026-09-15T16:45:00',remarks:'Completed all 25 outlets as planned. Weather delay occurred on day 2 due to heavy rain but caught up by working extended hours on day 3. All outlet photos uploaded. Positive feedback from 20 out of 25 outlet owners.',attachments:[{name:'outlet_photos.zip',size:'2.3 MB',type:'application/zip',uploaded:'2026-09-15T16:50:00'},{name:'visit_report.pdf',size:'156 KB',type:'application/pdf',uploaded:'2026-09-15T17:00:00'}]},
+{id:2,title:'Distributor Meeting - Q4 Planning',category:'Admin',priority:'Medium',status:'Completed',created:'2026-08-12T09:00:00',due:'2026-09-10',completed:'2026-09-10T14:30:00',remarks:'Discussed Q4 targets with distributor. Meeting notes and action items documented. Follow-up scheduled for next month.',attachments:[{name:'meeting_notes.pdf',size:'87 KB',type:'application/pdf',uploaded:'2026-09-10T14:35:00'}]},
+{id:3,title:'Collection Follow-up',category:'Collection',priority:'High',status:'Pending',created:'2026-08-15T11:00:00',due:'2026-09-20',completed:null,remarks:'Pending payment confirmation from 3 accounts. Follow-up calls scheduled for next week. Total outstanding: BDT 450,000.',attachments:[]},
+{id:4,title:'Weekly Sales Analysis',category:'Sales',priority:'Medium',status:'Completed',created:'2026-08-08T08:00:00',due:'2026-09-07',completed:'2026-09-07T17:00:00',remarks:'Targets met for the week. 12% growth in sales category. Detailed report submitted to regional manager.',attachments:[{name:'weekly_report.xlsx',size:'245 KB',type:'application/vnd.ms-excel',uploaded:'2026-09-07T17:05:00'}]}
+]},
+{user:'Nadia Rahman',role:'ASE',dept:'Field Sales',initials:'NR',tasks:[
+{id:5,title:'New Outlet Coverage - Central Zone',category:'Sales',priority:'Critical',status:'Completed',created:'2026-08-08T09:00:00',due:'2026-09-12',completed:'2026-09-12T18:00:00',remarks:'15 new outlets activated successfully. All paperwork submitted to HQ. Photos and registration forms attached. Two outlets require follow-up visits for additional product placement.',attachments:[{name:'outlet_form_1.pdf',size:'120 KB',type:'application/pdf',uploaded:'2026-09-12T18:05:00'},{name:'outlet_form_2.pdf',size:'118 KB',type:'application/pdf',uploaded:'2026-09-12T18:06:00'},{name:'outlet_photos_1.jpg',size:'3.2 MB',type:'image/jpeg',uploaded:'2026-09-12T18:10:00'},{name:'outlet_photos_2.jpg',size:'2.8 MB',type:'image/jpeg',uploaded:'2026-09-12T18:11:00'},{name:'registration_summary.xlsx',size:'95 KB',type:'application/vnd.ms-excel',uploaded:'2026-09-12T18:15:00'}]},
+{id:6,title:'Market Survey - Competitor Analysis',category:'Field Visit',priority:'Medium',status:'Completed',created:'2026-08-10T10:00:00',due:'2026-09-16',completed:'2026-09-16T15:30:00',remarks:'Competitor pricing data collected from 30 outlets. Analysis shows 8% price advantage in 3 categories. Detailed comparison chart attached.',attachments:[{name:'competitor_analysis.xlsx',size:'312 KB',type:'application/vnd.ms-excel',uploaded:'2026-09-16T15:35:00'},{name:'price_comparison_chart.pdf',size:'178 KB',type:'application/pdf',uploaded:'2026-09-16T15:36:00'}]},
+{id:7,title:'Training Session - New Products',category:'Admin',priority:'Medium',status:'In Progress',created:'2026-08-14T08:00:00',due:'2026-09-18',completed:null,remarks:'Training materials prepared. Session scheduled for Sep 18. Attendance confirmation from 12 participants pending.',attachments:[{name:'training_slides.pptx',size:'4.5 MB',type:'application/vnd.ms-powerpoint',uploaded:'2026-09-01T10:00:00'}]}
+]},
+{user:'Tanvir Ahmed',role:'SO',dept:'Field Sales',initials:'TA',tasks:[
+{id:8,title:'Reactivate Dormant Outlets',category:'Sales',priority:'High',status:'Completed',created:'2026-08-09T09:30:00',due:'2026-09-22',completed:'2026-09-21T16:00:00',remarks:'Visited 25 dormant outlets. Successfully reactivated 18 outlets with new orders. 7 outlets permanently closed. Detailed report with closure reasons attached.',attachments:[{name:'reactivation_report.pdf',size:'234 KB',type:'application/pdf',uploaded:'2026-09-21T16:05:00'},{name:'new_orders_summary.xlsx',size:'156 KB',type:'application/vnd.ms-excel',uploaded:'2026-09-21T16:08:00'}]},
+{id:9,title:'Route Optimization Study',category:'Field Visit',priority:'Low',status:'Completed',created:'2026-08-11T11:00:00',due:'2026-09-14',completed:'2026-09-14T13:00:00',remarks:'Analyzed current routes and proposed 3 optimization scenarios. Estimated time savings: 15-20% per week. Recommendations submitted.',attachments:[{name:'route_optimization.pdf',size:'412 KB',type:'application/pdf',uploaded:'2026-09-14T13:05:00'}]},
+{id:10,title:'Customer Feedback Collection',category:'Field Visit',priority:'Medium',status:'Pending',created:'2026-08-16T10:00:00',due:'2026-09-25',completed:null,remarks:'Feedback forms distributed to 40 outlets. 22 responses received so far. Target: 35 responses by due date.',attachments:[]}
+]},
+{user:'Sadia Islam',role:'ASM',dept:'Field Sales',initials:'SI',tasks:[
+{id:11,title:'Monthly Performance Review',category:'Admin',priority:'High',status:'Completed',created:'2026-08-05T08:00:00',due:'2026-09-05',completed:'2026-09-05T17:30:00',remarks:'Team performance reviewed. All KPIs met for August. Individual feedback sessions completed. Next month targets finalized.',attachments:[{name:'performance_report_august.pdf',size:'892 KB',type:'application/pdf',uploaded:'2026-09-05T17:35:00'},{name:'team_kpi_dashboard.xlsx',size:'445 KB',type:'application/vnd.ms-excel',uploaded:'2026-09-05T17:40:00'}]},
+{id:12,title:'Budget Planning - Q4',category:'Admin',priority:'Critical',status:'In Progress',created:'2026-08-12T09:00:00',due:'2026-09-19',completed:null,remarks:'Q4 budget proposals being finalized. Awaiting input from finance team. Draft version 2.0 attached for internal review.',attachments:[{name:'q4_budget_draft_v2.xlsx',size:'678 KB',type:'application/vnd.ms-excel',uploaded:'2026-09-10T14:00:00'}]},
+{id:13,title:'Strategic Account Planning',category:'Sales',priority:'High',status:'Completed',created:'2026-08-07T10:00:00',due:'2026-09-08',completed:'2026-09-08T16:00:00',remarks:'Growth plans prepared for 8 strategic accounts. Q4 targets set and approved by regional manager. Account owner meetings scheduled.',attachments:[{name:'strategic_account_plans.pdf',size:'1.2 MB',type:'application/pdf',uploaded:'2026-09-08T16:10:00'}]}
+]}
+];
+const previousMonthPlan=[
+ {title:'Morning kick-off meeting with MDR',activity:'Kick-off Meeting With MDR',frequency:'Daily',date:'2026-09-01',distributor:'Dhaka North Distribution',route:'Gulshan Route 01',location:'HQ',target:1,priority:'Medium'},
+ {title:'Dealer point visit — Dhaka North',activity:'Dealer Point Visit',frequency:'Daily',date:'2026-09-03',distributor:'Dhaka North Distribution',route:'Gulshan Route 01',location:'HQ',target:20,priority:'High'},
+ {title:'New outlet coverage — Uttara',activity:'New Outlet Coverage',frequency:'Daily',date:'2026-09-08',distributor:'Uttara Trade Centre',route:'Uttara Route 03',location:'Ex-HQ',target:25,priority:'High'},
+ {title:'Weekly sales performance analysis',activity:'Weekly Sales Analysis',frequency:'Weekly',date:'2026-09-14',distributor:'Dhaka North Distribution',route:'Gulshan Route 01',location:'HQ',target:1,priority:'Medium'},
+ {title:'Competitor market information collection',activity:'Competitor Market Information',frequency:'Weekly',date:'2026-09-21',distributor:'Mirpur Distribution House',route:'Mirpur Route 02',location:'Ex-HQ',target:15,priority:'Medium'},
+ {title:'Monthly distributor meeting',activity:'Distributor Meeting',frequency:'Monthly',date:'2026-09-27',distributor:'Dhaka North Distribution',route:'Gulshan Route 01',location:'HQ',target:1,priority:'High'}
+];
+const masterTaskPresets={
+ 'Priority outlet coverage':{category:'Field Visit',type:'New Outlet Coverage',frequency:'Daily Activity',title:'Priority outlet coverage',desc:'Visit the selected priority outlets and record coverage results.',target:25,priority:'High'},
+ 'Dealer point business review':{category:'Field Visit',type:'Dealer Point Visit',frequency:'Daily Activity',title:'Dealer point business review',desc:'Review sales, stock, collection, and service issues with the distributor.',target:1,priority:'High'},
+ 'Weekly sales performance analysis':{category:'Sales',type:'Weekly Sales Analysis',frequency:'Weekly Activity',title:'Weekly sales performance analysis',desc:'Analyse target versus achievement and document the next action plan.',target:1,priority:'Medium'},
+ 'Monthly distributor meeting':{category:'Admin',type:'Distributor Meeting',frequency:'Monthly Activity',title:'Monthly distributor meeting',desc:'Conduct the monthly business review and record agreed actions.',target:1,priority:'Medium'}
+};
+let tasks=JSON.parse(localStorage.getItem('sokrio-demo-tasks')||'null')||seed;let currentRole='Supervisor',planView=['list','calendar'].includes(localStorage.getItem('sokrio-task-plan-view'))?localStorage.getItem('sokrio-task-plan-view'):'list',pendingSubtasks=[],calendarYear=2026,calendarMonth=8;
+tasks.forEach((t,i)=>{if(!t.owner)t.owner=i%2?'Nadia Rahman':'Ravi Kumar'});
+let comments=JSON.parse(localStorage.getItem('sokrio-demo-comments')||'null')||structuredClone(sampleComments);
+let subtasks=JSON.parse(localStorage.getItem('sokrio-demo-subtasks')||'null')||structuredClone(sampleSubtasks);
+if(localStorage.getItem('sokrio-demo-version')!=='4'){tasks=JSON.parse(JSON.stringify(seed));comments=JSON.parse(JSON.stringify(sampleComments));subtasks=JSON.parse(JSON.stringify(sampleSubtasks));localStorage.setItem('sokrio-demo-tasks',JSON.stringify(tasks));localStorage.setItem('sokrio-demo-comments',JSON.stringify(comments));localStorage.setItem('sokrio-demo-subtasks',JSON.stringify(subtasks));localStorage.setItem('sokrio-demo-version','4')}
+const save=()=>localStorage.setItem('sokrio-demo-tasks',JSON.stringify(tasks));
+const saveComments=()=>localStorage.setItem('sokrio-demo-comments',JSON.stringify(comments));
+const saveSubtasks=()=>localStorage.setItem('sokrio-demo-subtasks',JSON.stringify(subtasks));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function badge(s){return `<span class="status ${s.toLowerCase().replaceAll(' ','-')}">${esc(s)}</span>`}
+function render(){
+ const q=(document.querySelector('#task-search')?.value||'').toLowerCase(),st=document.querySelector('#status-filter')?.value||'',cat=document.querySelector('#category-filter')?.value||'';
+ const shown=tasks.filter(t=>(t.title+' '+t.desc).toLowerCase().includes(q)&&(!st||t.status===st)&&(!cat||t.category===cat));
+ document.querySelector('#task-body').innerHTML=shown.map(t=>`<tr><td><div class="task-name">${esc(t.title)}<small>${esc(t.desc)}</small>${(subtasks[t.id]||[]).length?`<small style="color:var(--green)">✓ ${(subtasks[t.id]||[]).filter(s=>s.done).length}/${subtasks[t.id].length} subtasks complete</small>`:''}${(t.attachments||[]).length?`<small style="color:var(--green)">📎 ${t.attachments.length} attachment${t.attachments.length>1?'s':''}</small>`:''}</div></td><td>${badge(t.status)}</td><td>${esc(t.category)}</td><td><span class="priority ${t.priority.toLowerCase()}">${t.priority}</span></td><td>${t.due}</td><td><div class="bar tinybar"><span style="width:${taskProgress(t)}%"></span></div> ${taskProgress(t)}%</td><td class="row-actions"><button class="icon-btn" title="Subtasks (${(subtasks[t.id]||[]).length})" aria-label="Open subtasks" onclick="openSubtasks(${t.id})">☑</button>${currentRole!=='Viewer'?`<button class="icon-btn" title="Comments (${(comments[t.id]||[]).length})" aria-label="Open comments" onclick="openDiscussion(${t.id})">💬</button>`:'<button class="icon-btn" title="View" aria-label="View task" onclick="toast(\'Discussion is limited to task participants\')">👁</button>'}${(t.status==='Draft'||t.status==='Rejected')&&['Supervisor','Admin'].includes(currentRole)?`<button class="icon-btn" title="Edit" aria-label="Edit task" onclick="openEditTask(${t.id})">✎</button><button class="icon-btn" title="Submit" aria-label="Submit task" onclick="submitTask(${t.id})">↑</button>`:''}</td></tr>`).join('');
+ [...document.querySelectorAll('#task-body tr')].forEach((row,i)=>{const t=shown[i],actions=row.querySelector('.row-actions'),view=document.createElement('button');view.className='icon-btn';view.textContent='▤';view.title='View task details';view.setAttribute('aria-label','View task details');view.onclick=()=>openTaskDetail(t.id);actions.prepend(view);row.tabIndex=0;row.setAttribute('role','button');row.setAttribute('aria-label',`View details for ${t.title}`);row.style.cursor='pointer';row.onclick=e=>{if(e.target.closest('button,input,select,a'))return;openTaskDetail(t.id)};row.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&!e.target.closest('button,input,select,a')){e.preventDefault();openTaskDetail(t.id)}};if(t.owner==='Mahmud Sahiuddin'&&t.status==='Approved'){const b=document.createElement('button');b.className=t.executionCompleted?'icon-btn':'icon-btn complete';b.textContent='✓';b.title=t.executionCompleted?'Completed':'Mark complete';b.setAttribute('aria-label',b.title);b.disabled=!!t.executionCompleted;b.onclick=()=>markTaskComplete(t.id);actions.prepend(b)}else if(t.owner==='Mahmud Sahiuddin'&&t.status==='Submitted'){const s=document.createElement('span');s.className='status submitted';s.textContent='Awaiting approval';actions.prepend(s)}});
+ document.querySelector('#task-empty').classList.toggle('hidden',shown.length>0);
+ const pending=tasks.filter(t=>t.status==='Submitted');
+ const owners=[...new Set(pending.map(t=>t.owner))];
+ const planCount=document.querySelector('#plan-count');if(planCount)planCount.textContent=`${owners.length} plan${owners.length===1?'':'s'} need review`;
+ document.querySelector('#approval-list').innerHTML=owners.length?owners.map(owner=>{const plan=pending.filter(t=>t.owner===owner),high=plan.filter(t=>['High','Critical'].includes(t.priority)).length,assignedDrafts=tasks.filter(t=>t.owner===owner&&t.assignedBy&&['Draft','Rejected'].includes(t.status)).length;return `<div class="card team-plan"><div class="plan-head"><div class="person"><div class="avatar">${owner.split(' ').map(x=>x[0]).join('')}</div><div><div class="task-name">${esc(owner)}</div><small class="muted">Field Sales · Submitted full September plan</small></div></div>${badge('Submitted')}</div><div class="plan-metrics"><div><b>${plan.length}</b><small>Tasks submitted</small></div><div><b>${high}</b><small>High priority</small></div><div><b>${new Set(plan.map(t=>t.category)).size}</b><small>Categories</small></div><div><b>${assignedDrafts}</b><small>Assigned drafts</small></div></div><div class="plan-actions"><button class="btn small" onclick="openAssignTeamTask('${esc(owner)}')">＋ Assign task</button><button class="btn small" onclick="openPlanReview('${esc(owner)}')">Review full plan</button><button class="btn danger small" onclick="returnPlan('${esc(owner)}')">Return for revision</button><button class="btn primary small" onclick="approvePlan('${esc(owner)}')">Approve full plan</button></div></div>`}).join(''):'<div class="card empty"><p>All team plans have been reviewed.</p><button class="btn primary" onclick="openAssignTeamTask()">＋ Assign a team task</button></div>';
+ const active=tasks.filter(t=>t.status==='Approved'),ownerSelect=document.querySelector('#review-owner');
+ const selectedOwner=ownerSelect.value,known=[...new Set(active.map(t=>t.owner))].sort();ownerSelect.innerHTML='<option value="">All team members</option><option value="Mahmud Sahiuddin">My tasks — Mahmud</option>'+known.filter(x=>x!=='Mahmud Sahiuddin').map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');ownerSelect.value=selectedOwner;
+ const rq=(document.querySelector('#review-search').value||'').toLowerCase(),outcome=document.querySelector('#review-outcome').value;
+ const outcomeOf=t=>taskProgress(t)===100?'Achieved':taskProgress(t)>0?'Partially Achieved':'Not Achieved';
+ const reviewTasks=active.filter(t=>(!selectedOwner||t.owner===selectedOwner)&&(!outcome||outcomeOf(t)===outcome)&&(t.title+' '+t.owner+' '+t.category).toLowerCase().includes(rq));
+ document.querySelector('#review-body').innerHTML=reviewTasks.map(t=>`<tr><td><div class="task-name">${esc(t.title)}<small>${esc(t.category)} · Due ${t.due}</small>${(t.attachments||[]).length?`<small style="color:var(--green)">📎 ${t.attachments.length} proof file${t.attachments.length>1?'s':''}</small>`:''}</div></td><td><div class="person"><div class="avatar" style="width:30px;height:30px;font-size:10px">${t.owner.split(' ').map(x=>x[0]).slice(0,2).join('')}</div><div><b>${esc(t.owner)}</b><small class="muted" style="display:block">${t.owner==='Mahmud Sahiuddin'?'You':'Team member'}</small></div></div></td><td>${badge(t.status)}</td><td>${(subtasks[t.id]||[]).length?`<button class="icon-btn" title="Subtasks: ${(subtasks[t.id]||[]).filter(s=>s.done).length}/${subtasks[t.id].length} complete" aria-label="Open subtasks" onclick="openSubtasks(${t.id})">☑</button> <b>${taskProgress(t)}%</b>`:`<input aria-label="Progress for ${esc(t.title)}" type="range" min="0" max="100" value="${t.progress}" onchange="progress(${t.id},this.value)"> <b>${t.progress}%</b>`}</td><td>${badge(outcomeOf(t))}</td><td><button class="icon-btn" title="Comments" aria-label="Open comments" onclick="openDiscussion(${t.id})">💬</button></td></tr>`).join('');
+ [...document.querySelectorAll('#review-body tr')].forEach((row,i)=>{const t=reviewTasks[i],actions=row.lastElementChild,view=document.createElement('button');view.className='icon-btn';view.textContent='▤';view.title='View task details';view.setAttribute('aria-label','View task details');view.onclick=()=>openTaskDetail(t.id);actions.prepend(view);if((t.attachments||[]).length){const proof=document.createElement('button');proof.className='icon-btn';proof.textContent='📎';proof.title=`View proof attachments (${t.attachments.length})`;proof.setAttribute('aria-label',proof.title);proof.onclick=e=>{e.stopPropagation();openTaskDetail(t.id)};actions.prepend(proof)}if(t.owner==='Mahmud Sahiuddin'&&t.status==='Approved'){const complete=document.createElement('button');complete.className=t.executionCompleted?'icon-btn':'icon-btn complete';complete.textContent='✓';complete.title=t.executionCompleted?'Completed':'Mark complete';complete.setAttribute('aria-label',complete.title);complete.disabled=!!t.executionCompleted;complete.onclick=()=>markTaskComplete(t.id);actions.prepend(complete)}row.tabIndex=0;row.setAttribute('role','button');row.setAttribute('aria-label',`View progress details for ${t.title}`);row.style.cursor='pointer';row.onclick=e=>{if(e.target.closest('button,input,select,a'))return;openTaskDetail(t.id)};row.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&!e.target.closest('button,input,select,a')){e.preventDefault();openTaskDetail(t.id)}}});
+ document.querySelector('#review-empty').classList.toggle('hidden',reviewTasks.length>0);
+ document.querySelector('#attention-list').innerHTML=tasks.filter(t=>['Draft','Rejected','Submitted'].includes(t.status)).slice(0,3).map(t=>`<div class="task-mini"><div><b>${esc(t.title)}</b><small>${t.status==='Rejected'?'Rejected — update and resubmit':t.status==='Draft'?'Draft — submit before Aug 25':'Waiting for approval'}</small></div>${badge(t.status)}</div>`).join('');
+ document.querySelector('#kpi-total').textContent=tasks.length;document.querySelector('#kpi-pending').textContent=pending.length;document.querySelector('#kpi-approved').textContent=active.length;
+ renderCategoryAllocation();
+ renderCalendar();
+}
+function renderCategoryAllocation(){const box=document.querySelector('#category-allocation');if(!box)return;const mine=tasks.filter(t=>t.owner==='Mahmud Sahiuddin'&&!['Void','Abandoned','Expired'].includes(t.status)),cats=['Sales','Field Visit','Collection','Admin','Service','Other'],colors={'Sales':'#3971c7','Field Visit':'#0f6b4f','Collection':'#e38b39','Admin':'#8b79c6','Service':'#c34b4b','Other':'#87968f'},total=mine.length,data=cats.map(cat=>{const count=mine.filter(t=>t.category===cat).length;return{cat,count,pct:total?Math.round(count/total*100):0}});box.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:9px"><div><b>Category mix</b> <small class="muted">· ${total} tasks</small></div><small class="muted">Share of monthly plan</small></div><div style="display:flex;height:9px;border-radius:8px;overflow:hidden;background:#edf1ee">${data.filter(x=>x.count).map(x=>`<span title="${x.cat}: ${x.pct}%" style="width:${x.pct}%;background:${colors[x.cat]}"></span>`).join('')}</div><div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:9px">${data.map(x=>`<span class="chip"><i class="dot" style="background:${colors[x.cat]};margin-right:5px"></i>${x.cat} <b>${x.pct}%</b> <small>(${x.count})</small></span>`).join('')}</div>`}
+function togglePlanView(view,persist=true){if(!['list','calendar'].includes(view))view='list';planView=view;if(persist)localStorage.setItem('sokrio-task-plan-view',view);document.querySelector('#plan-list').classList.toggle('hidden',view!=='list');document.querySelector('#plan-calendar').classList.toggle('hidden',view!=='calendar');const listButton=document.querySelector('#list-toggle'),calendarButton=document.querySelector('#calendar-toggle');listButton.classList.toggle('active',view==='list');calendarButton.classList.toggle('active',view==='calendar');listButton.setAttribute('aria-pressed',view==='list');calendarButton.setAttribute('aria-pressed',view==='calendar');listButton.title=view==='list'?'Your saved default view':'Switch to List and save as default';calendarButton.title=view==='calendar'?'Your saved default view':'Switch to Calendar and save as default';if(view==='calendar')renderCalendar()}
+function renderCalendar(){const grid=document.querySelector('#calendar-grid');if(!grid)return;const heads=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>`<div class="cal-head">${x}</div>`).join(''),offset=2,days=[];for(let i=0;i<offset;i++)days.push('<div class="cal-day other"></div>');for(let day=1;day<=30;day++){const mine=tasks.filter(t=>t.owner==='Mahmud Sahiuddin'&&+(String(t.due).match(/\d{1,2}$/)?.[0]||0)===day);days.push(`<div class="cal-day" data-day="${day}" ondragover="calendarDragOver(event)" ondragleave="this.classList.remove('dragover')" ondrop="calendarDrop(event,${day})"><div class="day-num ${day===9?'today':''}">${day}</div>${mine.map(t=>`<div class="cal-task ${t.status.toLowerCase()}" draggable="${['Draft','Rejected'].includes(t.status)}" ondragstart="calendarDragStart(event,${t.id})" onclick="${['Draft','Rejected'].includes(t.status)?`openEditTask(${t.id})`:`openTaskDetail(${t.id})`}" title="${esc(t.title)} — click to view details"><b>${esc(t.title)}</b><span>${esc(t.location||t.category)} · ${esc(t.status)}</span></div>`).join('')}</div>`)}grid.innerHTML=heads+days.join('')}
+function calendarDragStart(e,id){e.dataTransfer.setData('text/task-id',id);e.dataTransfer.effectAllowed='move'}
+function calendarDragOver(e){e.preventDefault();e.currentTarget.classList.add('dragover');e.dataTransfer.dropEffect='move'}
+function calendarDrop(e,day){e.preventDefault();e.currentTarget.classList.remove('dragover');const id=+e.dataTransfer.getData('text/task-id'),t=tasks.find(x=>x.id===id);if(!t||t.owner!=='Mahmud Sahiuddin'||!['Draft','Rejected'].includes(t.status)){toast('Only your Draft or Returned tasks can be moved');return}const old=t.due;t.due='Sep '+String(day).padStart(2,'0');if(t.status==='Rejected')t.status='Draft';save();render();toast(`${t.title} moved from ${old} to ${t.due}`)}
+const renderCalendarBase=renderCalendar;renderCalendar=function(){renderCalendarBase();document.querySelectorAll('#calendar-grid .cal-day[data-day]').forEach(day=>{day.tabIndex=0;day.setAttribute('role','button');day.setAttribute('aria-label',`September ${day.dataset.day}: add tasks or view scheduled tasks`);day.onclick=e=>{if(e.target.closest('.cal-task'))return;openCalendarTaskPicker(+day.dataset.day)};day.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&!e.target.closest('.cal-task')){e.preventDefault();openCalendarTaskPicker(+day.dataset.day)}}})}
+const renderCalendarInteractive=renderCalendar;renderCalendar=function(){renderCalendarInteractive();document.querySelectorAll('#calendar-grid .cal-task').forEach(card=>{const t=tasks.find(x=>card.title.startsWith(x.title+' —'));if(!t)return;if(t.executionCompleted){card.classList.add('achieved');const label=card.querySelector('span');if(label)label.textContent=`${t.location||t.category} · Completed ✓`}else if(t.status==='Approved'&&t.owner==='Mahmud Sahiuddin'){const b=document.createElement('button');b.className='btn primary small';b.style.cssText='width:100%;margin-top:5px;padding:3px';b.textContent='✓ Complete';b.onclick=e=>{e.stopPropagation();markTaskComplete(t.id)};card.appendChild(b)}else if(t.status==='Submitted'){const note=document.createElement('small');note.textContent='Awaiting approval';note.style.display='block';card.appendChild(note)}})}
+function openCalendarTaskPicker(day){document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>Add tasks on September ${day}</h2><small class="muted">Select multiple Master Tasks and create them together as Drafts.</small></div><button class="close" onclick="closeModal()">×</button></div><div class="modal-body"><label class="review-task" style="background:#f5f8f6;padding-inline:10px"><input type="checkbox" onchange="toggleCalendarTaskSelection(this.checked)"><div><b>Select all available tasks</b><small class="muted" style="display:block">${Object.keys(masterTaskPresets).length} Master Tasks</small></div></label><div class="comment-list">${Object.entries(masterTaskPresets).map(([name,p],i)=>`<label class="review-task"><input type="checkbox" name="calendar-master-task" value="${esc(name)}"><div><b>${esc(name)}</b><small class="muted" style="display:block">${esc(p.category)} · ${esc(p.type)} · ${esc(p.frequency)}</small><p style="margin:4px 0 0">${esc(p.desc)}</p></div><span class="status approved">Ready</span></label>`).join('')}</div><div class="card pad" style="box-shadow:none;background:#fff7e9;margin-top:14px"><b>Created as editable Drafts</b><p class="muted" style="margin:4px 0 0">All selected tasks will use September ${day}. You can edit operational details or add subtasks afterward.</p></div></div><div class="modal-foot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="addCalendarTasks(${day})">Add selected tasks</button></div></div></div>`}
+function toggleCalendarTaskSelection(checked){document.querySelectorAll('[name=calendar-master-task]').forEach(x=>x.checked=checked)}
+function addCalendarTasks(day){const selected=[...document.querySelectorAll('[name=calendar-master-task]:checked')].map(x=>x.value);if(!selected.length){toast('Select at least one Master Task');return}selected.forEach((name,i)=>{const p=masterTaskPresets[name];tasks.unshift({id:Date.now()+i,title:p.title,desc:p.desc,status:'Draft',category:p.category,activity:p.type,frequency:p.frequency,preset:name,distributor:'Dhaka North Distribution',route:'Gulshan Route 01',location:'HQ',target:p.target,priority:p.priority,due:'Sep '+String(day).padStart(2,'0'),progress:0,owner:'Mahmud Sahiuddin'})});save();closeModal();render();togglePlanView('calendar');toast(`${selected.length} tasks created on September ${day}`)}
+const openCalendarTaskPickerBase=openCalendarTaskPicker;openCalendarTaskPicker=function(day){document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>September ${day}</h2><small class="muted">Select Master Tasks, then press Enter or Save Tasks.</small></div><button class="close" onclick="closeModal()">×</button></div><form onsubmit="event.preventDefault();addCalendarTasks(${day})"><div class="modal-body"><label class="review-task" style="background:#f5f8f6;padding-inline:10px"><input type="checkbox" onchange="toggleCalendarTaskSelection(this.checked)"><div><b>Select all available tasks</b><small class="muted" style="display:block">${Object.keys(masterTaskPresets).length} Master Tasks</small></div></label><div class="comment-list">${Object.entries(masterTaskPresets).map(([name,p])=>`<label class="review-task"><input type="checkbox" name="calendar-master-task" value="${esc(name)}"><div><b>${esc(name)}</b><small class="muted" style="display:block">${esc(p.category)} · ${esc(p.type)} · ${esc(p.frequency)}</small><p style="margin:4px 0 0">${esc(p.desc)}</p></div><span class="status approved">Ready</span></label>`).join('')}</div><p class="help" style="margin-top:12px">Keyboard: choose tasks with Space, then press Enter to save them on September ${day}.</p></div><div class="modal-foot"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button type="submit" class="btn primary">Save tasks</button></div></form></div></div>`;setTimeout(()=>document.querySelector('[name=calendar-master-task]')?.focus(),0)}
+const calendarMonths=['January','February','March','April','May','June','July','August','September','October','November','December'],calendarAbbr=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function taskBelongsToCalendarMonth(t,month,year){const cycle=`${year}-${String(month+1).padStart(2,'0')}`;if(t.cycleMonth)return t.cycleMonth===cycle;return year===2026&&String(t.due).startsWith(calendarAbbr[month]+' ')}
+function calendarPresetUsage(name,month,year,day){const p=masterTaskPresets[name],matching=tasks.filter(t=>t.owner==='Mahmud Sahiuddin'&&taskBelongsToCalendarMonth(t,month,year)&&(t.preset===name||(!t.preset&&t.title===p.title))),date=calendarAbbr[month]+' '+String(day).padStart(2,'0');return{count:matching.length,onDate:matching.filter(t=>t.due===date).length}}
+function changeCalendarMonth(delta){calendarMonth+=delta;if(calendarMonth>11){calendarMonth=0;calendarYear++}if(calendarMonth<0){calendarMonth=11;calendarYear--}renderCalendar()}
+renderCalendar=function(){const grid=document.querySelector('#calendar-grid');if(!grid)return;let toolbar=document.querySelector('#calendar-month-toolbar');if(!toolbar){grid.insertAdjacentHTML('beforebegin','<div id="calendar-month-toolbar" class="card pad" style="margin-bottom:12px"></div>');toolbar=document.querySelector('#calendar-month-toolbar')}const abbr=calendarAbbr[calendarMonth],mine=tasks.filter(t=>t.owner==='Mahmud Sahiuddin'&&String(t.due).startsWith(abbr+' ')),completed=mine.filter(t=>t.executionCompleted||taskProgress(t)===100).length,pct=mine.length?Math.round(completed/mine.length*100):0;toolbar.innerHTML=`<div class="plan-head"><div class="approval-actions"><button class="btn small" onclick="changeCalendarMonth(-1)">← Previous</button><button class="btn small" onclick="changeCalendarMonth(1)">Next →</button></div><div style="text-align:center"><h3 style="margin:0">${calendarMonths[calendarMonth]} ${calendarYear}</h3><small class="muted">Click any date to add future tasks</small></div><div style="min-width:180px"><div style="display:flex;justify-content:space-between"><b>Completed</b><b style="color:var(--green)">${pct}%</b></div><div class="bar" style="margin-top:6px"><span style="width:${pct}%"></span></div><small class="muted">${completed} of ${mine.length} tasks</small></div></div>`;const heads=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>`<div class="cal-head">${x}</div>`).join(''),offset=new Date(calendarYear,calendarMonth,1).getDay(),daysInMonth=new Date(calendarYear,calendarMonth+1,0).getDate(),days=[];for(let i=0;i<offset;i++)days.push('<div class="cal-day other"></div>');for(let day=1;day<=daysInMonth;day++){const dayTasks=mine.filter(t=>+(String(t.due).match(/\d{1,2}$/)?.[0]||0)===day);days.push(`<div class="cal-day" data-day="${day}"><div class="day-num">${day}</div>${dayTasks.map(t=>{const done=t.executionCompleted||taskProgress(t)===100;return `<div class="cal-task ${done?'achieved':t.status.toLowerCase()}" data-task-id="${t.id}" draggable="${['Draft','Rejected'].includes(t.status)}" title="${esc(t.title)} — click to view details"><b>${esc(t.title)}</b><span>${esc(t.location||t.category)} · ${done?'Completed ✓':esc(t.status)}</span>${!done&&t.status==='Approved'?'<button class="btn primary small calendar-complete" style="width:100%;margin-top:5px;padding:3px">✓ Complete</button>':''}${t.status==='Submitted'?'<small style="display:block">Awaiting approval</small>':''}</div>`}).join('')}</div>`)}grid.innerHTML=heads+days.join('');grid.querySelectorAll('.cal-day[data-day]').forEach(cell=>{const day=+cell.dataset.day;cell.tabIndex=0;cell.setAttribute('role','button');cell.setAttribute('aria-label',`${calendarMonths[calendarMonth]} ${day}, ${calendarYear}: add tasks`);cell.onclick=e=>{const card=e.target.closest('.cal-task');if(card){const id=+card.dataset.taskId;if(e.target.closest('.calendar-complete'))markTaskComplete(id);else if(['Draft','Rejected'].includes(tasks.find(t=>t.id===id).status))openEditTask(id);else openTaskDetail(id);return}openCalendarTaskPicker(day,calendarMonth,calendarYear)};cell.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&!e.target.closest('.cal-task')){e.preventDefault();openCalendarTaskPicker(day,calendarMonth,calendarYear)}};cell.ondragover=calendarDragOver;cell.ondragleave=()=>cell.classList.remove('dragover');cell.ondrop=e=>calendarDrop(e,day)})}
+openCalendarTaskPicker=function(day,month=calendarMonth,year=calendarYear){const monthName=calendarMonths[month],catalogue=Object.entries(masterTaskPresets).map(([name,p])=>({name,p,...calendarPresetUsage(name,month,year,day)})).sort((a,b)=>a.count-b.count||a.name.localeCompare(b.name)),used=catalogue.filter(x=>x.count>0).length,untouched=catalogue.length-used;document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>${monthName} ${day}, ${year}</h2><small class="muted">Review monthly usage, select Master Tasks, then press Enter or Save Tasks.</small></div><button class="close" onclick="closeModal()">×</button></div><form onsubmit="event.preventDefault();addCalendarTasks(${day},${month},${year})"><div class="modal-body"><div class="card pad" style="box-shadow:none;background:#f5f8f6;margin-bottom:12px"><div class="plan-head"><div><b>Master Task usage in ${monthName}</b><small class="muted" style="display:block">Counts include your tasks in every workflow status.</small></div><div class="approval-actions"><span class="status approved">${used} used</span><span class="status">${untouched} not added</span></div></div></div><label class="review-task" style="background:#f5f8f6;padding-inline:10px"><input type="checkbox" onchange="toggleCalendarTaskSelection(this.checked)"><div><b>Select all available tasks</b><small class="muted" style="display:block">${catalogue.length} Master Tasks</small></div></label><div class="comment-list">${catalogue.map(({name,p,count,onDate})=>`<label class="review-task"><input type="checkbox" name="calendar-master-task" value="${esc(name)}" aria-label="${esc(name)}, ${count} times in ${monthName}"><div><b>${esc(name)}</b><small class="muted" style="display:block">${esc(p.category)} · ${esc(p.type)} · ${esc(p.frequency)}</small><p style="margin:4px 0 0">${esc(p.desc)}</p>${onDate?`<small style="display:block;color:var(--orange);margin-top:4px">Already added ${onDate}× on this date</small>`:''}</div><span class="status ${count?'approved':''}">${count?`${count}× this month`:'Not added yet'}</span></label>`).join('')}</div><p class="help" style="margin-top:12px">Tasks not yet used are shown first. Monthly counts help prevent unintended repetition; recurring tasks can still be selected when needed.</p><p class="help">The selected tasks will be created as editable Drafts on ${monthName} ${day}.</p></div><div class="modal-foot"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button type="submit" class="btn primary">Save tasks</button></div></form></div></div>`;setTimeout(()=>document.querySelector('[name=calendar-master-task]')?.focus(),0)}
+addCalendarTasks=function(day,month=calendarMonth,year=calendarYear){const selected=[...document.querySelectorAll('[name=calendar-master-task]:checked')].map(x=>x.value);if(!selected.length){toast('Select at least one Master Task');return}selected.forEach((name,i)=>{const p=masterTaskPresets[name];tasks.unshift({id:Date.now()+i,title:p.title,desc:p.desc,status:'Draft',category:p.category,activity:p.type,frequency:p.frequency,preset:name,distributor:'Dhaka North Distribution',route:'Gulshan Route 01',location:'HQ',target:p.target,priority:p.priority,due:calendarAbbr[month]+' '+String(day).padStart(2,'0'),cycleMonth:`${year}-${String(month+1).padStart(2,'0')}`,progress:0,owner:'Mahmud Sahiuddin'})});save();closeModal();render();togglePlanView('calendar');toast(`${selected.length} tasks created on ${calendarMonths[month]} ${day}, ${year}`)}
+calendarDrop=function(e,day){e.preventDefault();e.currentTarget.classList.remove('dragover');const id=+e.dataTransfer.getData('text/task-id'),t=tasks.find(x=>x.id===id);if(!t||t.owner!=='Mahmud Sahiuddin'||!['Draft','Rejected'].includes(t.status)){toast('Only your Draft or Returned tasks can be moved');return}const old=t.due;t.due=calendarAbbr[calendarMonth]+' '+String(day).padStart(2,'0');t.cycleMonth=`${calendarYear}-${String(calendarMonth+1).padStart(2,'0')}`;if(t.status==='Rejected')t.status='Draft';save();render();toast(`${t.title} moved from ${old} to ${t.due}`)}
+const renderCalendarDrag=renderCalendar;renderCalendar=function(){renderCalendarDrag();document.querySelectorAll('#calendar-grid .cal-task[draggable="true"]').forEach(card=>card.ondragstart=e=>calendarDragStart(e,+card.dataset.taskId))}
+const renderCalendarHorizon=renderCalendar;renderCalendar=function(){renderCalendarHorizon();const diff=(calendarYear-2026)*12+calendarMonth-7,canCreate=diff>=0&&diff<=3,toolbar=document.querySelector('#calendar-month-toolbar .plan-head');if(toolbar){const flag=document.createElement('span');flag.className=canCreate?'status approved':'status rejected';flag.textContent=canCreate?'Future Drafts allowed':'View only · outside planning horizon';toolbar.querySelector('div:nth-child(2)')?.appendChild(flag)}if(!canCreate)document.querySelectorAll('#calendar-grid .cal-day[data-day]').forEach(cell=>{cell.onclick=e=>{if(e.target.closest('.cal-task')){const id=+e.target.closest('.cal-task').dataset.taskId;openTaskDetail(id)}else toast('This month is outside the 3-month future planning horizon')};cell.onkeydown=null;cell.style.cursor='default'})}
+const renderCalendarIcons=renderCalendar;renderCalendar=function(){renderCalendarIcons();document.querySelectorAll('.calendar-complete').forEach(b=>{b.className='icon-btn complete calendar-complete';b.textContent='✓';b.title='Mark complete';b.setAttribute('aria-label','Mark task complete')})}
+function navigate(id){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.nav button[data-view]').forEach(x=>x.classList.toggle('active',x.dataset.view===id));document.querySelector('#crumb').textContent=({dashboard:'Overview','team-dashboard':'Team Dashboard',tasks:'My tasks',approvals:'Team plan reviews',review:'Progress & review',reports:'Reports','user-report':'User-wise Report',users:'Users & roles',templates:'Task types',settings:'Configuration'})[id];if(id==='tasks')togglePlanView(planView,false);if(id==='user-report')renderUserReport();scrollTo(0,0)}
+function formatUserReportDate(dateStr){if(!dateStr)return'---';const d=new Date(dateStr);const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return months[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear()}
+function formatUserReportDateTime(dateStr){if(!dateStr)return'---';const d=new Date(dateStr);const now=new Date();const diff=Math.floor((now-d)/(1000*60*60*24));if(diff===0)return'Today';if(diff===1)return'Yesterday';if(diff<7)return diff+' days ago';return formatUserReportDate(dateStr)}
+function getFileIcon(type){if(type.includes('pdf'))return'📄';if(type.includes('excel')||type.includes('sheet'))return'📊';if(type.includes('word')||type.includes('document'))return'📝';if(type.includes('image')||type.includes('jpeg')||type.includes('png'))return'🖼';if(type.includes('zip')||type.includes('archive'))return'📦';if(type.includes('powerpoint')||type.includes('presentation'))return'📽';return'📎'}
+function calculateDuration(created,completed){const c=new Date(created);const end=completed?new Date(completed):new Date();const days=Math.floor((end-c)/(1000*60*60*24));return days+' days'}
+function renderUserReport(){const tbody=document.querySelector('#user-report-table');const empty=document.querySelector('#user-report-empty');if(!tbody||!empty)return;const search=(document.querySelector('#user-report-search')?.value||'').toLowerCase();const statusFilter=document.querySelector('#user-report-status')?.value||'';const categoryFilter=document.querySelector('#user-report-category')?.value||'';const sortBy=document.querySelector('#user-report-sort')?.value||'due';const rows=[];userReportData.forEach(userData=>{userData.tasks.filter(t=>{if(search&&!(t.title.toLowerCase().includes(search)||userData.user.toLowerCase().includes(search)))return false;if(statusFilter&&t.status!==statusFilter)return false;if(categoryFilter&&t.category!==categoryFilter)return false;return true}).forEach(task=>{rows.push({user:userData,task})})});if(rows.length===0){tbody.innerHTML='';empty.classList.remove('hidden');return}rows.sort((a,b)=>{if(sortBy==='due')return new Date(a.task.due)-new Date(b.task.due);if(sortBy==='created')return new Date(a.task.created)-new Date(b.task.created);if(sortBy==='priority'){const p={Critical:4,High:3,Medium:2,Low:1};return(p[b.task.priority]||0)-(p[a.task.priority]||0)}if(sortBy==='status')return a.task.status.localeCompare(b.task.status);return 0});tbody.innerHTML=rows.map(r=>`<tr style="cursor:pointer" onclick="viewUserReportTask(${r.task.id},'${esc(r.user.user)}')"><td><div class="person"><div class="avatar" style="width:32px;height:32px;font-size:11px">${r.user.initials}</div><div><div class="task-name">${esc(r.user.user)}</div><small class="muted">${esc(r.user.role)}</small></div></div></td><td><b>${esc(r.task.title)}</b><br><small class="muted">${esc(r.task.category)}</small></td><td><small class="muted">${esc(r.task.category)}</small></td><td><span class="priority ${r.task.priority.toLowerCase()}">${r.task.priority}</span></td><td>${badge(r.task.status)}</td><td>${formatUserReportDate(r.task.created)}</td><td>${formatUserReportDate(r.task.due)}</td><td style="${r.task.completed?'color:var(--green);font-weight:700':''}">${formatUserReportDate(r.task.completed)}</td><td style="max-width:250px"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.task.remarks||'')}">${esc(r.task.remarks)||'<span class="muted">---</span>'}</div></td><td style="text-align:center">${r.task.attachments.length>0?`<b style="color:var(--green)">${r.task.attachments.length}</b>`:'<span class="muted">---</span>'}</td></tr>`).join('');empty.classList.add('hidden')}
+function viewUserReportTask(taskId,userName){const userData=userReportData.find(u=>u.user===userName);const task=userData.tasks.find(t=>t.id===taskId);if(!task)return;sheet(`<div class="sheet-head"><h2>${esc(task.title)}</h2><button class="close" onclick="closeSheet()">×</button></div><div class="form-grid" style="grid-template-columns:1fr 1fr;gap:14px"><div class="field"><label>User</label><div class="person"><div class="avatar" style="width:32px;height:32px;font-size:11px">${userData.initials}</div><div><b>${esc(userData.user)}</b><br><small class="muted">${esc(userData.role)} · ${esc(userData.dept)}</small></div></div></div><div class="field"><label>Status</label><div>${badge(task.status)}</div></div><div class="field"><label>Category</label><div><b>${esc(task.category)}</b></div></div><div class="field"><label>Priority</label><div><span class="priority ${task.priority.toLowerCase()}">${task.priority}</span></div></div><div class="field"><label>Created Date</label><div>${formatUserReportDate(task.created)}<br><small class="muted">${formatUserReportDateTime(task.created)}</small></div></div><div class="field"><label>Due Date</label><div><b>${formatUserReportDate(task.due)}</b></div></div><div class="field"><label>Completed Date</label><div style="${task.completed?'color:var(--green);font-weight:700':''}">${task.completed?formatUserReportDate(task.completed)+'<br><small class="muted">'+formatUserReportDateTime(task.completed)+'</small>':'<span class="muted">Not completed</span>'}</div></div><div class="field"><label>Duration</label><div>${calculateDuration(task.created,task.completed)}${task.completed&&new Date(task.completed)<=new Date(task.due)?' <span style="color:var(--green)">✓ On time</span>':task.completed?' <span style="color:var(--orange)">⚠ Late</span>':''}</div></div></div><div class="field" style="margin-top:14px"><label>💬 Remarks</label><div style="background:#f5f8f6;border:1px solid var(--line);border-radius:8px;padding:12px;white-space:pre-wrap;max-height:200px;overflow:auto">${esc(task.remarks||'No remarks added.')}</div></div>${task.attachments.length?`<div class="field" style="margin-top:14px"><label>📎 Attachments (${task.attachments.length})</label><div style="display:grid;gap:8px;margin-top:8px">${task.attachments.map(att=>`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5f8f6;border:1px solid var(--line);border-radius:8px"><span style="font-size:24px">${getFileIcon(att.type)}</span><div style="flex:1"><b>${esc(att.name)}</b><br><small class="muted">${att.size} · Uploaded ${formatUserReportDateTime(att.uploaded)}</small></div><button class="btn small" onclick="toast('Downloaded: ${esc(att.name)}')">📥 Download</button></div>`).join('')}${task.attachments.length>1?'<button class="btn small" style="margin-top:6px" onclick="toast(\'Downloaded all attachments as ZIP\')">📦 Download All</button>':''}</div></div>`:''}`)}
+function filterUserReport(){renderUserReport()}
+function exportUserReport(format){toast(`Exporting to ${format.toUpperCase()}...`);setTimeout(()=>toast(`${format.toUpperCase()} report downloaded`),800)}
+function openUserDetail(name){const userStats={
+'Ravi Kumar':{tasks:12,submitted:10,achieved:9,achPct:90,dept:'Field Sales',role:'SO',trend:5},
+'Nadia Rahman':{tasks:15,submitted:14,achieved:13,achPct:93,dept:'Field Sales',role:'ASE',trend:8},
+'Tanvir Ahmed':{tasks:9,submitted:8,achieved:6,achPct:75,dept:'Field Sales',role:'SO',trend:-3},
+'Sadia Islam':{tasks:11,submitted:10,achieved:9,achPct:90,dept:'Field Sales',role:'ASM',trend:2},
+'Karim Ahmed':{tasks:0,submitted:12,achieved:10,achPct:83,dept:'Field Sales',role:'SO',trend:0}
+};const u=userStats[name]||{};const initials=name.split(' ').map(x=>x[0]).join('');document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>${esc(name)}</h2><small class="muted">${u.dept} · ${u.role}</small></div><button class="close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="grid kpis" style="grid-template-columns:repeat(3,1fr)"><div class="card kpi"><div class="label">Sep Target</div><div class="num">${u.tasks}</div><div class="muted">Planned tasks</div></div><div class="card kpi"><div class="label">Aug Submitted</div><div class="num">${u.submitted}</div><div class="muted">Last month</div></div><div class="card kpi"><div class="label">Aug Achieved</div><div class="num">${u.achieved}</div><div class="muted">Tasks completed</div></div></div><div class="card pad" style="margin-top:18px"><div class="card-title"><h3>Performance Overview</h3></div><div class="progress-row"><span>Achievement Rate</span><div class="bar"><span style="width:${u.achPct}%"></span></div><b>${u.achPct}%</b></div><div class="progress-row"><span>Trend</span><div class="bar"><span style="width:${Math.abs(u.trend)*10}%;background:${u.trend>=0?'var(--green)':'var(--red)'}"></span></div><b style="color:${u.trend>=0?'var(--green)':'var(--red)'}">${u.trend>=0?'↑':'↓'} ${Math.abs(u.trend)}%</b></div></div><div class="card pad" style="margin-top:18px"><div class="card-title"><h3>Recent Activity</h3></div><div class="list"><div class="task-mini"><div><b>Last submission:</b><small>${u.tasks>0?'Aug 18, 2026':'No recent activity'}</small></div></div><div class="task-mini"><div><b>Last login:</b><small>Today, 9:30 AM</small></div></div></div></div></div><div class="modal-foot"><button class="btn" onclick="closeModal()">Close</button><button class="btn" onclick="toast('Message sent to ${esc(name)}')">💬 Send Message</button><button class="btn primary" onclick="toast('Viewing ${esc(name)}\\'s full plan');closeModal();navigate('approvals')">View Full Plan</button></div></div></div>`}
+document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>navigate(b.dataset.view));document.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>navigate(b.dataset.jump));
+document.querySelectorAll('.create-btn').forEach(b=>b.onclick=openTaskModal);['task-search','status-filter','category-filter','review-search','review-owner','review-outcome'].forEach(id=>document.querySelector('#'+id).addEventListener('input',render));
+document.querySelector('#role').onchange=e=>{currentRole=e.target.value;const canCreate=['Supervisor','Admin'].includes(currentRole);document.querySelectorAll('.create-btn').forEach(x=>x.classList.toggle('hidden',!canCreate));document.querySelectorAll('.role-admin').forEach(x=>x.classList.toggle('hidden',currentRole!=='Admin'));document.querySelectorAll('.role-approver').forEach(x=>x.classList.toggle('hidden',!['Supervisor','Approver','Admin'].includes(currentRole)));if(currentRole==='Viewer')navigate('dashboard');render();toast(`Switched to ${currentRole} demo view`)};
+let pendingAttachments=[];
+function fmtFileSize(bytes){if(bytes==null||isNaN(bytes))return'';const u=['B','KB','MB','GB'];let i=0;while(bytes>=1024&&i<u.length-1){bytes/=1024;i++}return (i?bytes.toFixed(1):Math.round(bytes))+' '+u[i]}
+function fileMeta(f){return {name:f.name,size:fmtFileSize(f.size),type:f.type||'application/octet-stream',uploaded:'Just now'}}
+function attachIcon(type){return getFileIcon(type||'')}
+function renderAttachmentList(el,arr,removeFn){if(!el)return;el.innerHTML=arr.length?arr.map((a,i)=>`<div class="task-mini" style="grid-template-columns:auto 1fr auto;align-items:center"><span style="font-size:17px">${attachIcon(a.type)}</span><div><b>${esc(a.name)}</b><small class="muted" style="display:block">${esc(a.size||'')} · ${esc(a.uploaded||'')}</small></div><button type="button" class="btn danger small" onclick="${removeFn}(${i})">Remove</button></div>`).join(''):'<div class="muted">No files selected.</div>'}
+function previewNewAttachments(files){Array.from(files||[]).forEach(f=>pendingAttachments.push(fileMeta(f)));renderAttachmentList(document.querySelector('#new-attachment-list'),pendingAttachments,'removeNewAttachment');const c=document.querySelector('#new-attachment-count');if(c)c.textContent=`📎 Attachments (${pendingAttachments.length})`}
+function removeNewAttachment(i){pendingAttachments.splice(i,1);renderAttachmentList(document.querySelector('#new-attachment-list'),pendingAttachments,'removeNewAttachment');const c=document.querySelector('#new-attachment-count');if(c)c.textContent=`📎 Attachments (${pendingAttachments.length})`}
+function addEditAttachments(files){Array.from(files||[]).forEach(f=>pendingAttachments.push(fileMeta(f)));renderAttachmentList(document.querySelector('#edit-attachment-list'),pendingAttachments,'removeEditAttachment');const c=document.querySelector('#edit-attachment-label');if(c)c.textContent=`📎 Attachments (${pendingAttachments.length})`}
+function removeEditAttachment(i){pendingAttachments.splice(i,1);renderAttachmentList(document.querySelector('#edit-attachment-list'),pendingAttachments,'removeEditAttachment');const c=document.querySelector('#edit-attachment-label');if(c)c.textContent=`📎 Attachments (${pendingAttachments.length})`}
+function openTaskModal(){
+ pendingSubtasks=[];pendingAttachments=[];document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>Propose a task for September</h2><small class="muted">Choose an Admin-defined task type, then provide your proposed plan.</small></div><button class="close" onclick="closeModal()">×</button></div><form id="task-form"><div class="modal-body"><div class="form-grid"><div class="field"><label>Task frequency *</label><select name="frequency"><option>Daily Activity</option><option>Weekly Activity</option><option>Monthly Activity</option></select></div><div class="field"><label>Task type *</label><select name="activity" onchange="applyActivity(this.value)"><option>New Outlet Coverage</option><option>Dealer Point Visit</option><option>Weekly Sales Analysis</option><option>Distributor Meeting</option><option>Task Planning (PJP)</option><option>Other Task</option></select><span class="help">Task types are maintained by Admin.</span></div><div class="field full"><label>Your proposed task title *</label><input name="title" minlength="3" maxlength="200" required value="New Outlet Coverage — Gulshan Route 01"></div><div class="field full"><label>Your plan and objective</label><textarea name="desc" maxlength="2000" placeholder="Describe what you propose to accomplish and why"></textarea></div><div class="field"><label>Proposed distributor *</label><select name="distributor"><option>Dhaka North Distribution</option><option>Uttara Trade Centre</option><option>Mirpur Distribution House</option></select></div><div class="field"><label>Proposed area / route *</label><select name="route"><option>Gulshan Route 01</option><option>Uttara Route 03</option><option>Mirpur Route 02</option></select></div><div class="field"><label>Proposed HQ type *</label><select name="location"><option>HQ</option><option>Ex-HQ</option><option>Night Stay</option></select></div><div class="field"><label>Proposed MDR</label><select name="mdr"><option>Shakil Ahmed</option><option>Farhan Ali</option><option>Not applicable</option></select></div><div id="dynamic-fields" class="field full"><label>Your planned outlet / activity quantity *</label><input name="target" type="number" min="1" value="25"><span class="help">Enter the target you are proposing for approval.</span></div><div class="field"><label>Proposed priority *</label><select name="priority"><option>Medium</option><option>Low</option><option>High</option><option>Critical</option></select></div><div class="field"><label>Proposed date *</label><input name="due" type="date" min="2026-09-01" max="2026-09-30" value="2026-09-08"></div><div class="field full"><label>Measurable subtasks</label><div style="display:flex;gap:8px"><input id="new-subtask-title" maxlength="200" placeholder="For example: Confirm outlet list"><button type="button" class="btn" onclick="addPendingSubtask()">＋ Add</button></div><div id="pending-subtask-list" class="list" style="margin-top:9px"></div><span class="help">Optional. Add the steps that will calculate this task’s completion.</span></div><div class="field full"><label id="new-attachment-count">📎 Attachments</label><input id="new-task-files" type="file" multiple onchange="previewNewAttachments(this.files)"><div id="new-attachment-list" class="list" style="margin-top:9px"></div><span class="help">Optional. Attach photos, reports, or documents to this task.</span></div></div></div><div class="modal-foot"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button type="submit" name="mode" value="Draft" class="btn">Save draft</button><button type="submit" name="mode" value="Submitted" class="btn primary">Add to submitted plan</button></div></form></div></div>`;
+ document.querySelector('[name=frequency]').closest('.field').insertAdjacentHTML('beforebegin',`<div class="field full"><label>Choose a preset task</label><select name="preset" onchange="applyTaskPreset(this.value)"><option value="">Custom task — enter details manually</option>${Object.keys(masterTaskPresets).map(x=>`<option>${esc(x)}</option>`).join('')}</select><span class="help">Preset tasks fill category, type, frequency, title, objective, target, and priority automatically. You may place the task as-is or add subtasks.</span></div>`);
+ document.querySelector('[name=activity]').closest('.field').insertAdjacentHTML('beforebegin','<div class="field"><label>Task category *</label><select name="category" required><option value="">Select category</option><option>Sales</option><option selected>Field Visit</option><option>Collection</option><option>Admin</option><option>Service</option><option>Other</option></select><span class="help">Category identifies the business purpose for reports.</span></div>');
+ document.querySelector('#pending-subtask-list').insertAdjacentHTML('afterend',`<label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input type="checkbox" name="masterRequest" style="width:auto"> ${currentRole==='Admin'?'Add this custom task to the Master Task catalogue':'Request permission to add this custom task to the Master Task catalogue'}</label>`);
+ document.querySelector('#task-form').onsubmit=e=>{e.preventDefault();const d=new FormData(e.target),mode=e.submitter.value,id=Date.now();tasks.unshift({id,title:d.get('title').trim(),desc:d.get('desc')||'No description added.',status:mode,category:d.get('category'),frequency:d.get('frequency'),activity:d.get('activity'),preset:d.get('preset'),distributor:d.get('distributor'),route:d.get('route'),location:d.get('location'),target:d.get('target'),priority:d.get('priority'),due:'Sep '+(d.get('due')||'30').slice(-2),progress:0,owner:'Mahmud Sahiuddin',attachments:pendingAttachments.map(a=>({...a}))});if(pendingSubtasks.length)subtasks[id]=pendingSubtasks.map((title,i)=>({id:id+i+1,title,done:false}));save();saveSubtasks();const masterRequested=d.get('masterRequest');closeModal();render();navigate('tasks');toast(masterRequested?(currentRole==='Admin'?'Task saved and added to Master Task catalogue':'Task saved; Master Task request sent for approval'):(mode==='Draft'?`Task draft saved with ${pendingSubtasks.length} subtasks`:'Task proposal and subtasks submitted'))}
+}
+function applyTaskPreset(name){if(!name)return;const p=masterTaskPresets[name],form=document.querySelector('#task-form');form.category.value=p.category;form.activity.value=p.type;form.frequency.value=p.frequency;form.title.value=p.title;form.desc.value=p.desc;form.target.value=p.target;form.priority.value=p.priority;toast('Preset applied — add a date or optional subtasks')}
+function addPendingSubtask(){const input=document.querySelector('#new-subtask-title'),title=input.value.trim();if(!title)return;pendingSubtasks.push(title);input.value='';renderPendingSubtasks();input.focus()}
+function removePendingSubtask(index){pendingSubtasks.splice(index,1);renderPendingSubtasks()}
+function renderPendingSubtasks(){const list=document.querySelector('#pending-subtask-list');if(!list)return;list.innerHTML=pendingSubtasks.map((title,i)=>`<div class="task-mini"><div><b>${i+1}. ${esc(title)}</b><small>Equal-weight step</small></div><button type="button" class="btn danger small" onclick="removePendingSubtask(${i})">Remove</button></div>`).join('')}
+function openCopyMonth(){document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>Copy August plan to September</h2><small class="muted">Select tasks, review shifted dates, and create them together as new drafts.</small></div><button class="close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="card-title"><b>${previousMonthPlan.length} reusable tasks found</b><span class="status draft">Dates shifted</span></div><div class="comment-list">${previousMonthPlan.map((t,i)=>`<div class="review-task"><input type="checkbox" name="copy-task" value="${i}" checked><div><b>${esc(t.title)}</b><small class="muted" style="display:block">${esc(t.activity)} · ${esc(t.distributor)} · ${esc(t.route)}</small></div><input aria-label="New date" name="copy-date-${i}" type="date" value="${t.date}" min="2026-09-01" max="2026-09-30" style="border:1px solid var(--line);border-radius:7px;padding:6px"></div>`).join('')}</div><div class="card pad" style="box-shadow:none;background:#fff7e9;margin-top:14px"><b>Review reminder</b><p class="muted" style="margin:4px 0 0">Copied tasks receive new IDs and Draft status. Old progress, comments, achievements, and approvals are not copied.</p></div></div><div class="modal-foot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="copyFullMonth()">Create selected drafts</button></div></div></div>`}
+function copyFullMonth(){const selected=[...document.querySelectorAll('[name=copy-task]:checked')];if(!selected.length){toast('Select at least one task');return}selected.forEach((box,n)=>{const source=previousMonthPlan[+box.value],date=document.querySelector(`[name=copy-date-${box.value}]`).value;tasks.unshift({id:Date.now()+n,title:source.title,desc:`Copied from August plan; review operational details before submission.`,status:'Draft',category:source.frequency,activity:source.activity,distributor:source.distributor,route:source.route,location:source.location,target:source.target,priority:source.priority,due:'Sep '+date.slice(-2),progress:0,owner:'Mahmud Sahiuddin',copiedFrom:'August 2026'})});save();closeModal();render();navigate('tasks');toast(`${selected.length} tasks copied into the September draft plan`)}
+function saveMonthlyPlan(){const mine=tasks.filter(t=>t.owner==='Mahmud Sahiuddin'&&['Draft','Rejected'].includes(t.status));if(!mine.length){toast('Add draft tasks before saving a reusable plan');return}localStorage.setItem('sokrio-saved-plan',JSON.stringify(mine.map(({id,status,progress,reason,...t})=>t)));toast(`Saved reusable plan with ${mine.length} tasks`)}
+function openSavedPlans(){const saved=JSON.parse(localStorage.getItem('sokrio-saved-plan')||'null');document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>Saved monthly plans</h2><small class="muted">Start a new month from a reusable plan.</small></div><button class="close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="card team-plan"><div class="plan-head"><div><b>${saved?'My saved field plan':'Standard Field Sales PJP'}</b><small class="muted" style="display:block">${saved?saved.length:previousMonthPlan.length} tasks · Daily, weekly, and monthly activities</small></div><span class="status approved">Ready to use</span></div><div class="plan-metrics"><div><b>${saved?saved.length:previousMonthPlan.length}</b><small>Tasks</small></div><div><b>3</b><small>Frequencies</small></div><div><b>1 min</b><small>To reuse</small></div></div><div class="plan-actions"><button class="btn primary" onclick="closeModal();openCopyMonth()">Use for September</button></div></div></div></div></div>`}
+function submitMonthlyPlan(){const eligible=tasks.filter(t=>t.owner==='Mahmud Sahiuddin'&&['Draft','Rejected'].includes(t.status));if(!eligible.length){toast('There are no draft tasks ready to submit');return}if(!confirm(`Submit your complete plan with ${eligible.length} task${eligible.length>1?'s':''} for Supervisor review?`))return;eligible.forEach(t=>t.status='Submitted');save();render();toast(`Full monthly plan submitted with ${eligible.length} tasks`)}
+function openTaskDetail(id){const t=tasks.find(x=>x.id===id),steps=subtasks[id]||[];if(!t)return;document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>${esc(t.title)}</h2><small class="muted">Read-only task details</small></div><button class="close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="plan-head" style="margin-bottom:18px"><div>${badge(t.status)} <span class="priority ${t.priority.toLowerCase()}" style="margin-left:8px">${esc(t.priority)}</span></div>${['Approved','Achieved'].includes(t.status)?'<span class="status approved">🔒 Plan locked</span>':''}</div><div class="form-grid"><div class="field"><label>Owner</label><b>${esc(t.owner)}</b></div><div class="field"><label>Proposed date</label><b>${esc(t.due)}</b></div><div class="field"><label>Category</label><b>${esc(t.category)}</b></div><div class="field"><label>Task type</label><b>${esc(t.activity||t.title)}</b></div><div class="field"><label>Frequency</label><b>${esc(t.frequency||'Monthly plan activity')}</b></div><div class="field"><label>Progress</label><b>${taskProgress(t)}%${steps.length?` · ${steps.filter(s=>s.done).length}/${steps.length} subtasks`:''}</b></div><div class="field"><label>Distributor</label><b>${esc(t.distributor||'Not specified')}</b></div><div class="field"><label>Area / route</label><b>${esc(t.route||'Not specified')}</b></div><div class="field"><label>HQ type</label><b>${esc(t.location||'Not specified')}</b></div><div class="field"><label>Planned target</label><b>${esc(t.target??'Not specified')}</b></div><div class="field full"><label>Objective / description</label><p style="margin:0">${esc(t.desc||'No description provided.')}</p></div></div>${steps.length?`<div class="card pad" style="box-shadow:none;margin-top:18px"><div class="card-title"><h3>Subtasks</h3><b>${steps.filter(s=>s.done).length}/${steps.length}</b></div>${steps.map(s=>`<div style="padding:8px 0;border-top:1px solid var(--line)">${s.done?'☑':'☐'} ${esc(s.title)}</div>`).join('')}</div>`:''}</div><div class="modal-foot"><button class="btn" onclick="openDiscussion(${id})">Comments ${(comments[id]||[]).length}</button><button class="btn" onclick="openSubtasks(${id})">View subtasks</button><button class="btn primary" onclick="closeModal()">Close</button></div></div></div>`}
+function openEditTask(id){const t=tasks.find(x=>x.id===id);if(!t||!['Draft','Rejected'].includes(t.status)){toast('Only Draft or Returned tasks can be edited');return}document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>Edit draft task</h2><small class="muted">Changes remain in Draft until you submit the plan.</small></div><button class="close" onclick="closeModal()">×</button></div><form onsubmit="saveDraftEdit(event,${id})"><div class="modal-body"><div class="form-grid"><div class="field full"><label>Task title *</label><input name="title" required minlength="3" value="${esc(t.title)}"></div><div class="field full"><label>Objective / description</label><textarea name="desc">${esc(t.desc)}</textarea></div><div class="field"><label>Task type</label><select name="activity"><option selected>${esc(t.activity||t.title)}</option><option>Dealer Point Visit</option><option>New Outlet Coverage</option><option>Weekly Sales Analysis</option><option>Distributor Meeting</option></select></div><div class="field"><label>Proposed date *</label><input name="due" type="date" min="2026-09-01" max="2026-09-30" value="2026-09-${String(t.due).match(/\d{2}$/)?.[0]||'01'}" required></div><div class="field"><label>Distributor</label><select name="distributor"><option selected>${esc(t.distributor||'Dhaka North Distribution')}</option><option>Uttara Trade Centre</option><option>Mirpur Distribution House</option></select></div><div class="field"><label>Area / route</label><select name="route"><option selected>${esc(t.route||'Gulshan Route 01')}</option><option>Uttara Route 03</option><option>Mirpur Route 02</option></select></div><div class="field"><label>HQ type</label><select name="location"><option ${t.location==='HQ'?'selected':''}>HQ</option><option ${t.location==='Ex-HQ'?'selected':''}>Ex-HQ</option><option ${t.location==='Night Stay'?'selected':''}>Night Stay</option></select></div><div class="field"><label>Planned target</label><input name="target" type="number" min="0" value="${esc(t.target||0)}"></div><div class="field"><label>Priority</label><select name="priority">${['Low','Medium','High','Critical'].map(x=>`<option ${t.priority===x?'selected':''}>${x}</option>`).join('')}</select></div></div>${t.reason?`<div class="card pad" style="box-shadow:none;background:#fff3f3;margin-top:15px"><b>Return reason</b><p style="margin-bottom:0">${esc(t.reason)}</p></div>`:''}</div><div class="modal-foot"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn primary">Save draft changes</button></div></form></div></div>`}
+const openEditTaskBase=openEditTask;openEditTask=function(id){openEditTaskBase(id);const t=tasks.find(x=>x.id===id),activity=document.querySelector('[name=activity]');if(activity)activity.closest('.field').insertAdjacentHTML('afterend',`<div class="field"><label>Task category *</label><select name="category" required>${['Sales','Field Visit','Collection','Admin','Service','Other'].map(x=>`<option ${t.category===x?'selected':''}>${x}</option>`).join('')}</select></div>`);const foot=document.querySelector('.modal-foot');if(foot){const button=document.createElement('button');button.type='button';button.className='btn';button.textContent=`Manage subtasks (${(subtasks[id]||[]).length})`;button.onclick=()=>openSubtasks(id);foot.insertAdjacentElement('afterbegin',button)}}
+const openEditTaskAttach=openEditTask;openEditTask=function(id){openEditTaskAttach(id);const t=tasks.find(x=>x.id===id);if(!t)return;pendingAttachments=(t.attachments||[]).map(a=>({...a}));const grid=document.querySelector('.modal .form-grid');if(!grid)return;grid.insertAdjacentHTML('beforeend',`<div class="field full"><label id="edit-attachment-label">📎 Attachments (${pendingAttachments.length})</label><input id="edit-task-files" type="file" multiple onchange="addEditAttachments(this.files)"><div id="edit-attachment-list" class="list" style="margin-top:9px"></div><span class="help">Optional. Attach photos, reports, or documents to this draft.</span></div>`);renderAttachmentList(document.querySelector('#edit-attachment-list'),pendingAttachments,'removeEditAttachment')}
+const openTaskDetailBase=openTaskDetail;openTaskDetail=function(id){openTaskDetailBase(id);const t=tasks.find(x=>x.id===id),foot=document.querySelector('.modal-foot');if(foot)[...foot.querySelectorAll('button')].forEach(b=>{const label=b.textContent.trim();if(label.startsWith('Comments')){b.className='icon-btn';b.textContent='💬';b.title=label;b.setAttribute('aria-label',label)}else if(label==='View subtasks'){b.className='icon-btn';b.textContent='☑';b.title=label;b.setAttribute('aria-label',label)}else if(label==='Close'){b.className='icon-btn';b.textContent='×';b.title='Close';b.setAttribute('aria-label','Close')}});if(t?.status==='Approved'&&foot){const button=document.createElement('button');button.className=t.executionCompleted?'icon-btn':'icon-btn complete';button.textContent='✓';button.title=t.executionCompleted?'Task completed':'Mark task complete';button.setAttribute('aria-label',button.title);button.disabled=!!t.executionCompleted;button.onclick=()=>markTaskComplete(id);foot.insertAdjacentElement('afterbegin',button)}}
+let proofTaskId=null;
+const openTaskDetailAttach=openTaskDetail;openTaskDetail=function(id){openTaskDetailAttach(id);const t=tasks.find(x=>x.id===id);if(!t)return;const canEdit=t.status==='Approved'&&t.owner==='Mahmud Sahiuddin'&&!['Approver','Admin','Viewer'].includes(currentRole),atts=t.attachments||[];if(!atts.length&&!canEdit)return;proofTaskId=id;const grid=document.querySelector('.modal .form-grid');if(!grid)return;grid.insertAdjacentHTML('beforeend',`<div class="field full"><label id="detail-proof-label">📎 ${canEdit?'Execution proof':'Attachments'} (${atts.length})</label>${canEdit?`<input id="detail-proof-files" type="file" multiple onchange="addProofAttachments(this.files)"><span class="help">Attach your Excel/report proof here — your supervisor can download it while reviewing execution.</span>`:'<span class="help">Proof attached by the task owner — use Download to check.</span>'}<div id="detail-proof-list" class="list" style="margin-top:9px"></div></div>`);renderProofList()}
+function renderProofList(){const el=document.querySelector('#detail-proof-list');if(!el)return;const t=tasks.find(x=>x.id===proofTaskId),atts=t?(t.attachments||[]):[],canEdit=!!t&&t.status==='Approved'&&t.owner==='Mahmud Sahiuddin'&&!['Approver','Admin','Viewer'].includes(currentRole);el.innerHTML=atts.length?atts.map((a,i)=>`<div class="task-mini" style="grid-template-columns:auto 1fr auto;align-items:center"><span style="font-size:17px">${attachIcon(a.type)}</span><div><b>${esc(a.name)}</b><small class="muted" style="display:block">${esc(a.size||'')} · Uploaded ${esc(a.uploaded||'')}</small></div>${canEdit?`<button type="button" class="btn danger small" onclick="removeProofAttachment(${i})">Remove</button>`:`<button class="icon-btn" title="Download ${esc(a.name)}" onclick="toast('Demo: download of ${esc(a.name)}')">⇩</button>`}</div>`).join(''):(canEdit?'<div class="muted">No proof attached yet — upload your Excel/report above.</div>':'<div class="muted">No attachments.</div>');const c=document.querySelector('#detail-proof-label');if(c)c.textContent=`📎 ${canEdit?'Execution proof':'Attachments'} (${atts.length})`}
+function addProofAttachments(files){const t=tasks.find(x=>x.id===proofTaskId);if(!t)return;t.attachments=t.attachments||[];Array.from(files||[]).forEach(f=>t.attachments.push(fileMeta(f)));save();render();renderProofList();toast(`${t.attachments.length} proof file${t.attachments.length>1?'s':''} attached — your supervisor can now download them`)}
+function removeProofAttachment(i){const t=tasks.find(x=>x.id===proofTaskId);if(!t)return;t.attachments=(t.attachments||[]).filter((a,idx)=>idx!==i);save();render();renderProofList();toast('Proof file removed')}
+function markTaskComplete(id){const t=tasks.find(x=>x.id===id);if(!t||t.status!=='Approved'){toast('Only approved tasks can be completed during execution');return}if(!confirm('Mark this task as completed with 100% progress?'))return;(subtasks[id]||[]).forEach(s=>s.done=true);t.progress=100;t.executionCompleted=true;t.completedAt='Just now';save();saveSubtasks();closeModal();render();toast('Task marked complete — 100% progress recorded')}
+function saveDraftEdit(e,id){e.preventDefault();const t=tasks.find(x=>x.id===id),d=new FormData(e.target);Object.assign(t,{title:d.get('title').trim(),desc:d.get('desc').trim(),activity:d.get('activity'),category:d.get('category'),distributor:d.get('distributor'),route:d.get('route'),location:d.get('location'),target:+d.get('target'),priority:d.get('priority'),due:'Sep '+d.get('due').slice(-2),status:'Draft'});t.attachments=pendingAttachments.map(a=>({...a}));delete t.reason;save();closeModal();render();toast('Draft changes saved')}
+function applyActivity(value){const form=document.querySelector('#task-form');form.title.value=value+' — ';const defaults={'New Outlet Coverage':'Field Visit','Dealer Point Visit':'Field Visit','Weekly Sales Analysis':'Sales','Distributor Meeting':'Admin','Task Planning (PJP)':'Admin','Other Task':'Other'},category=form.querySelector('[name=category]');if(category)category.value=defaults[value]||'Other';form.title.focus()}
+function openTaskTypeBuilder(name='New task type'){document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>${esc(name)}</h2><small class="muted">Admin controls the catalogue—not the employee’s plan details.</small></div><button class="close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="form-grid"><div class="field full"><label>Task type name *</label><input value="${esc(name==='New task type'?'':name)}" placeholder="For example: Distributor Meeting"></div><div class="field"><label>Frequency *</label><select><option>Daily</option><option>Weekly</option><option>Monthly</option></select></div><div class="field"><label>Status</label><select><option>Active</option><option>Inactive</option></select></div><div class="field full"><label>Available to roles *</label><select multiple size="4"><option selected>SO</option><option selected>ASE</option><option>ASM</option><option>RSM</option></select></div><div class="field full"><label>Description</label><textarea placeholder="Explain what this task type represents"></textarea></div><div class="field full"><div class="card pad" style="box-shadow:none;background:#f7faf8"><b>Entered later by the employee</b><p class="muted" style="margin-bottom:0">Proposed date, distributor, area, route, HQ/Ex-HQ/Night Stay, MDR, quantity target, priority, objective, and remarks are supplied when the employee adds this task type to their monthly plan.</p></div></div></div></div><div class="modal-foot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="closeModal();toast('Task type saved and available for planning')">Save task type</button></div></div></div>`}
+function openCategoryBuilder(name='New category'){document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>${esc(name)}</h2><small class="muted">Admin-managed task category</small></div><button class="close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="form-grid"><div class="field"><label>Category name *</label><input required value="${name==='New category'?'':esc(name)}" placeholder="For example: Trade Marketing"></div><div class="field"><label>Unique code *</label><input value="${name==='New category'?'':esc(name.toUpperCase().replaceAll(' ','_'))}" placeholder="TRADE_MARKETING"></div><div class="field"><label>Display colour</label><select><option>Green</option><option>Blue</option><option>Orange</option><option>Purple</option><option>Red</option><option>Grey</option></select></div><div class="field"><label>Status</label><select><option>Active</option><option>Inactive</option></select></div><div class="field full"><label>Available to roles</label><select multiple size="4"><option selected>SO</option><option selected>ASE</option><option selected>ASM</option><option selected>RSM</option></select></div><div class="field full"><label>Description</label><textarea placeholder="Explain the business purpose of this category"></textarea></div></div></div><div class="modal-foot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="closeModal();toast('Task category saved')">Save category</button></div></div></div>`}
+const openTaskTypeBuilderBase=openTaskTypeBuilder;openTaskTypeBuilder=function(name='New task type'){openTaskTypeBuilderBase(name);const frequency=document.querySelector('.modal [label]'),statusSelect=[...document.querySelectorAll('.modal .field')].find(x=>x.querySelector('label')?.textContent==='Status');if(statusSelect)statusSelect.insertAdjacentHTML('afterend','<div class="field"><label>Default task category *</label><select name="defaultCategory" required><option>Sales</option><option selected>Field Visit</option><option>Collection</option><option>Admin</option><option>Service</option><option>Other</option></select><span class="help">Prefilled when a user selects this task type.</span></div>')}
+function closeModal(){document.querySelector('#modal-root').innerHTML=''}
+function taskProgress(t){const list=subtasks[t.id]||[];return list.length?Math.round(list.filter(s=>s.done).length/list.length*100):t.progress}
+function openSubtasks(id){const t=tasks.find(x=>x.id===id),list=subtasks[id]||[],canDefine=['Draft','Rejected'].includes(t.status),canComplete=t.status==='Approved';document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>Subtasks</h2><small class="muted">${esc(t.title)}</small></div><button class="close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="card pad" style="box-shadow:none;margin-bottom:15px"><div class="plan-head"><div><b>${list.filter(s=>s.done).length} of ${list.length} completed</b><small class="muted" style="display:block">Parent progress is calculated automatically</small></div><b style="font-size:24px;color:var(--green)">${taskProgress(t)}%</b></div><div class="bar" style="margin-top:12px"><span style="width:${taskProgress(t)}%"></span></div></div><div class="comment-list">${list.length?list.map(s=>`<div class="review-task"><input type="checkbox" ${s.done?'checked':''} ${canComplete?'': 'disabled'} onchange="toggleSubtask(${id},${s.id},this.checked)"><div><b style="${s.done?'text-decoration:line-through;color:var(--muted)':''}">${esc(s.title)}</b><small class="muted" style="display:block">${s.done?'Completed':'Pending'} · Equal weight</small></div>${canDefine?`<button class="btn danger small" onclick="removeSubtask(${id},${s.id})">Remove</button>`:''}</div>`).join(''):'<div class="empty">No subtasks yet. Break this task into measurable steps.</div>'}</div>${canDefine?`<form class="comment-compose" onsubmit="addSubtask(event,${id})"><div class="field"><label>Add a measurable step</label><input name="title" required maxlength="200" placeholder="For example: Confirm outlet list"></div><div style="text-align:right;margin-top:10px"><button class="btn primary">＋ Add subtask</button></div></form>`:`<p class="help" style="margin-top:15px">${canComplete?'Check completed steps during execution. Subtask definitions are locked after approval.':'Subtasks are read-only while awaiting approval.'}</p>`}</div></div></div>`}
+function addSubtask(e,id){e.preventDefault();const title=new FormData(e.target).get('title').trim();if(!title)return;subtasks[id]??=[];subtasks[id].push({id:Date.now(),title,done:false});saveSubtasks();render();openSubtasks(id);toast('Subtask added to the draft')}
+function removeSubtask(id,subId){subtasks[id]=(subtasks[id]||[]).filter(s=>s.id!==subId);saveSubtasks();render();openSubtasks(id);toast('Subtask removed')}
+function toggleSubtask(id,subId,done){const t=tasks.find(x=>x.id===id);if(t.status!=='Approved'){toast('Completion can be updated only during execution');openSubtasks(id);return}const s=(subtasks[id]||[]).find(x=>x.id===subId);s.done=done;t.progress=taskProgress(t);saveSubtasks();save();render();openSubtasks(id);toast(`Parent progress updated to ${taskProgress(t)}%`)}
+function openDiscussion(id){
+ const t=tasks.find(x=>x.id===id),thread=comments[id]||[];
+ document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>Task discussion</h2><small class="muted">${esc(t.title)}</small></div><button class="close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="comment-list">${thread.length?thread.map(c=>`<div class="comment"><div class="comment-avatar">${c.author.split(' ').map(x=>x[0]).slice(0,2).join('')}</div><div><div class="comment-bubble">${c.replyTo?`<div class="replying">Replying to ${esc((thread.find(x=>x.id===c.replyTo)||{}).author||'a comment')}</div>`:''}<div class="comment-meta"><b>${esc(c.author)} <small>· ${esc(c.role)}</small></b><small>${esc(c.time)}</small></div><p>${esc(c.text)}</p></div><button class="reply-link" onclick="setReply(${id},${c.id},this.dataset.name)" data-name="${esc(c.author)}">Reply</button></div></div>`).join(''):'<div class="empty">No comments yet. Start the conversation.</div>'}</div><form class="comment-compose" onsubmit="addComment(event,${id})"><div id="reply-context"></div><div class="field"><label>Add a comment</label><textarea name="comment" required maxlength="2000" placeholder="Write an update, question, or reply…"></textarea><input type="hidden" name="replyTo"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><small class="muted">Visible to task participants</small><button class="btn primary">Send comment</button></div></form></div></div></div>`;
+}
+function setReply(taskId,commentId,name){const form=document.querySelector('.comment-compose');form.replyTo.value=commentId;document.querySelector('#reply-context').innerHTML=`<div class="replying">Replying to ${esc(name)} <button type="button" class="close" style="float:right;font-size:14px" onclick="this.parentElement.remove();document.querySelector('.comment-compose').replyTo.value=''">×</button></div>`;form.comment.focus()}
+function addComment(e,id){e.preventDefault();const d=new FormData(e.target),text=d.get('comment').trim();if(!text)return;comments[id]??=[];comments[id].push({id:Date.now(),author:currentRole==='Approver'?'Meera Shah':'Mahmud Sahiuddin',role:currentRole==='Supervisor'?'Assignee':currentRole,text,time:'Just now',replyTo:d.get('replyTo')?+d.get('replyTo'):undefined});saveComments();render();openDiscussion(id);toast('Comment posted and participants notified')}
+function submitTask(id){let t=tasks.find(x=>x.id===id);t.status='Submitted';save();render();toast('Task submitted for approval')}
+function approveTask(id){let t=tasks.find(x=>x.id===id);t.status='Approved';save();render();toast('Task approved and locked')}
+function rejectTask(id){let reason=prompt('Rejection reason (at least 10 characters):');if(!reason)return;if(reason.trim().length<10){toast('Please provide at least 10 characters');return}let t=tasks.find(x=>x.id===id);t.status='Rejected';t.reason=reason;save();render();toast('Task returned to its owner')}
+function approvePlan(owner){if(owner==='Mahmud Sahiuddin'){toast('You cannot approve your own plan');return}const assignedDrafts=tasks.filter(t=>t.owner===owner&&t.assignedBy&&['Draft','Rejected'].includes(t.status));if(assignedDrafts.length){toast(`${owner} must complete and submit ${assignedDrafts.length} assigned draft${assignedDrafts.length>1?'s':''} before full-plan approval`);return}tasks.forEach(t=>{if(t.owner===owner&&t.status==='Submitted')t.status='Approved'});save();render();toast(`${owner}'s full plan approved and locked`)}
+function returnPlan(owner){const reason=prompt(`Why should ${owner} revise this plan? (at least 10 characters)`);if(!reason)return;if(reason.trim().length<10){toast('Please provide at least 10 characters');return}tasks.forEach(t=>{if(t.owner===owner&&t.status==='Submitted'){t.status='Rejected';t.reason=reason}});save();render();toast(`Plan returned to ${owner} for revision`)}
+function openAssignTeamTask(owner=''){const reports=['Ravi Kumar','Nadia Rahman','Tanvir Ahmed','Sadia Islam'],selected=reports.includes(owner)?owner:reports[0],firstPreset=Object.keys(masterTaskPresets)[0];document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>Assign a task to a team member</h2><small class="muted">Create a clear assignment from an approved Master Task preset.</small></div><button class="close" onclick="closeModal()">×</button></div><form onsubmit="assignTeamTask(event)"><div class="modal-body"><div class="form-grid"><div class="field"><label>Team member *</label><select name="owner" required>${reports.map(x=>`<option ${x===selected?'selected':''}>${esc(x)}</option>`).join('')}</select></div><div class="field"><label>Master Task *</label><select name="preset" required onchange="updateTeamAssignmentPreset(this.value)">${Object.keys(masterTaskPresets).map(x=>`<option>${esc(x)}</option>`).join('')}</select></div><div class="field"><label>Requested date *</label><input name="due" type="date" min="2026-09-01" max="2026-09-30" value="2026-09-15" required></div><div class="field"><label>Priority *</label><select name="priority"><option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option></select></div><div class="field full"><label>Supervisor instruction *</label><textarea name="instruction" required maxlength="1000" placeholder="Explain the expected outcome and any important direction.">Please review the assignment, complete the operational details, and include it in your September plan.</textarea></div><div class="field full"><div id="assignment-preset-preview" class="card pad" style="box-shadow:none;background:#f5f8f6"></div></div></div><div class="card pad" style="box-shadow:none;background:#fff7e9;margin-top:14px"><b>Member review required</b><p class="muted" style="margin:4px 0 0">The assignment is created as an editable Draft. The team member is notified, adds route/distributor/target details or subtasks, and submits it for normal plan approval.</p></div></div><div class="modal-foot"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button type="submit" class="btn primary">Assign task</button></div></form></div></div>`;updateTeamAssignmentPreset(firstPreset)}
+function updateTeamAssignmentPreset(name){const p=masterTaskPresets[name],box=document.querySelector('#assignment-preset-preview');if(!p||!box)return;box.innerHTML=`<div class="plan-head"><div><b>${esc(p.title)}</b><small class="muted" style="display:block">${esc(p.category)} · ${esc(p.type)} · ${esc(p.frequency)}</small></div><span class="status approved">Master Task</span></div><p style="margin-bottom:0">${esc(p.desc)}</p>`;const priority=document.querySelector('[name=priority]');if(priority)priority.value=p.priority}
+function assignTeamTask(e){e.preventDefault();const d=new FormData(e.target),owner=d.get('owner'),name=d.get('preset'),p=masterTaskPresets[name],instruction=d.get('instruction').trim(),id=Date.now();if(!p)return;tasks.unshift({id,title:p.title,desc:`${p.desc} Supervisor instruction: ${instruction}`,status:'Draft',category:p.category,activity:p.type,frequency:p.frequency,preset:name,distributor:'To be proposed by team member',route:'To be proposed by team member',location:'To be proposed by team member',target:p.target,priority:d.get('priority'),due:'Sep '+d.get('due').slice(-2),cycleMonth:'2026-09',progress:0,owner,assignedBy:'Mahmud Sahiuddin',assignmentNote:instruction,assignedAt:'Just now'});save();closeModal();render();toast(`${p.title} assigned to ${owner} as a Draft; notification sent`)}
+function openPlanReview(owner){const plan=tasks.filter(t=>t.owner===owner&&t.status==='Submitted');document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>${esc(owner)}’s September plan</h2><small class="muted">Review ${plan.length} submitted tasks together</small></div><button class="close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="comment-list">${plan.map(t=>`<label class="review-task"><input type="checkbox" name="review-task" value="${t.id}" checked><div><b>${esc(t.title)}</b><small class="muted" style="display:block">${esc(t.category)} · ${esc(t.priority)} · Due ${t.due}</small><p style="margin:4px 0 0">${esc(t.desc)}</p></div><button type="button" class="btn small" onclick="openDiscussion(${t.id})">Comments ${(comments[t.id]||[]).length}</button></label>`).join('')}</div><p class="help">Selected tasks can be approved together. Unselected tasks remain pending for a later decision.</p></div><div class="modal-foot"><button class="btn danger" onclick="closeModal();returnPlan('${esc(owner)}')">Return full plan</button><button class="btn primary" onclick="approveSelected('${esc(owner)}')">Approve selected</button></div></div></div>`}
+function approveSelected(owner){const ids=[...document.querySelectorAll('[name=review-task]:checked')].map(x=>+x.value);if(!ids.length){toast('Select at least one task');return}tasks.forEach(t=>{if(ids.includes(t.id)&&t.owner===owner)t.status='Approved'});save();closeModal();render();toast(`${ids.length} selected task${ids.length>1?'s':''} approved and locked`)}
+function progress(id,v){let t=tasks.find(x=>x.id===id);t.progress=+v;save();render();toast('Progress updated')}
+function resetDemo(){if(!confirm('Reset all prototype tasks, comments, and subtasks to the sample data?'))return;tasks=JSON.parse(JSON.stringify(seed));comments=JSON.parse(JSON.stringify(sampleComments));subtasks=JSON.parse(JSON.stringify(sampleSubtasks));save();saveComments();saveSubtasks();render();navigate('approvals');toast('Sample team plans restored')}
+function openMasterTaskBuilder(name='New master task'){document.querySelector('#modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><div class="modal-head"><div><h2>${esc(name)}</h2><small class="muted">Ready-to-use task preset for authorised users</small></div><button class="close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="form-grid"><div class="field full"><label>Preset task name *</label><input value="${name==='New master task'?'':esc(name)}" placeholder="Priority outlet coverage"></div><div class="field"><label>Category *</label><select><option>Sales</option><option selected>Field Visit</option><option>Collection</option><option>Admin</option><option>Service</option></select></div><div class="field"><label>Task type *</label><select><option>New Outlet Coverage</option><option>Dealer Point Visit</option><option>Weekly Sales Analysis</option><option>Distributor Meeting</option></select></div><div class="field"><label>Frequency *</label><select><option>Daily</option><option>Weekly</option><option>Monthly</option></select></div><div class="field"><label>Default priority</label><select><option>Medium</option><option>High</option><option>Critical</option><option>Low</option></select></div><div class="field full"><label>Preset objective</label><textarea>Complete the standard activity and record measurable results.</textarea></div><div class="field"><label>Default target</label><input type="number" value="25"></div><div class="field"><label>Available to roles</label><select multiple size="3"><option selected>SO</option><option selected>ASE</option><option>ASM</option></select></div><div class="field full"><label>Catalogue permission</label><select><option>Published by Admin</option><option>Pending master-data approval</option></select></div></div></div><div class="modal-foot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="closeModal();toast('Master Task preset published')">Publish master task</button></div></div></div>`}
+function toast(msg){let el=document.createElement('div');el.className='toast';el.textContent=msg;document.body.appendChild(el);setTimeout(()=>el.remove(),2600)}
+document.querySelector('#templates').insertAdjacentHTML('beforeend',`<div class="card table-card" style="margin-top:20px"><div class="pad card-title"><div><h3>Master Task presets</h3><small class="muted">Ready-made tasks users can place directly or extend with subtasks.</small></div><button class="btn primary small" onclick="openMasterTaskBuilder()">＋ New master task</button></div><table><thead><tr><th>Preset task</th><th>Category</th><th>Task type</th><th>Frequency</th><th>Default target</th><th>Status</th><th></th></tr></thead><tbody>${Object.entries(masterTaskPresets).map(([name,p])=>`<tr><td><b>${esc(name)}</b></td><td>${esc(p.category)}</td><td>${esc(p.type)}</td><td>${esc(p.frequency.replace(' Activity',''))}</td><td>${p.target}</td><td><span class="status approved">Published</span></td><td><button class="btn small" onclick="openMasterTaskBuilder('${esc(name)}')">Edit</button></td></tr>`).join('')}</tbody></table></div>`);
+document.querySelector('#templates h1').textContent='Admin task setup';document.querySelector('#templates .heading p').textContent='Manage task types and ready-to-use Master Task presets.';
+document.querySelector('#settings .form-grid .field.full').insertAdjacentHTML('afterend','<div class="field full"><label>Future planning horizon</label><select><option>1 month</option><option selected>3 months</option><option>6 months</option><option>12 months</option></select><span class="help">Users may prepare future Draft plans within this horizon.</span></div>');
+document.querySelector('#tasks .toolbar').insertAdjacentHTML('beforebegin','<div id="category-allocation" class="card" style="margin-bottom:12px;padding:12px 15px"></div>');
+render();
+togglePlanView(planView,false);
+
+// Dashboard tab switching
+function switchDashboardTab(tabName) {
+  // Update tab buttons
+  document.querySelectorAll('.dashboard-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  event.target.classList.add('active');
+
+  // Update tab content
+  document.querySelectorAll('.dashboard-tab-content').forEach(content => {
+    content.classList.remove('active');
+  });
+
+  const contentId = tabName === 'my-tasks' ? 'dashboard-my-tasks' : 'dashboard-team';
+  document.getElementById(contentId).classList.add('active');
+
+  // If switching to team tab, initialize hierarchy
+  if (tabName === 'team') {
+    renderDashboardHierarchy();
+  }
+
+  // Update breadcrumb
+  const crumb = document.getElementById('crumb');
+  if (crumb) {
+    crumb.textContent = tabName === 'my-tasks' ? 'Overview' : 'Overview / Team';
+  }
+}
+
+// Dashboard-specific hierarchy functions
+let dashboardHierarchyScope = { id: 'dhaka', label: 'Dhaka Region', count: 80 };
+
+function renderDashboardHierarchy() {
+  const tree = document.getElementById('dashboard-hierarchy-tree');
+  if (!tree) return;
+  tree.innerHTML = renderNode(hierarchyData, 0);
+}
+
+function toggleDashboardHierarchy(event) {
+  event.stopPropagation();
+  const dropdown = document.getElementById('dashboard-hierarchy-dropdown');
+  if (!dropdown) return;
+
+  dropdown.classList.toggle('show');
+
+  if (dropdown.classList.contains('show')) {
+    renderDashboardHierarchy();
+  }
+}
+
+function selectDashboardHierarchy(id, label, count) {
+  dashboardHierarchyScope = { id, label, count };
+
+  // Update button
+  const labelEl = document.getElementById('dashboard-hierarchy-label');
+  const countEl = document.getElementById('dashboard-hierarchy-count');
+  if (labelEl) labelEl.textContent = label;
+  if (countEl) countEl.textContent = count;
+
+  // Update breadcrumb
+  updateDashboardBreadcrumb(id);
+
+  // Update info text
+  const scopeEl = document.getElementById('dashboard-team-scope');
+  if (scopeEl) scopeEl.textContent = `${label} (${count} users)`;
+
+  // Close dropdown
+  const dropdown = document.getElementById('dashboard-hierarchy-dropdown');
+  if (dropdown) dropdown.classList.remove('show');
+
+  // Update KPIs
+  updateDashboardTeamKPIs(count);
+
+  // Re-render tree
+  renderDashboardHierarchy();
+
+  toast(`Dashboard filtered to: ${label}`);
+}
+
+function updateDashboardBreadcrumb(nodeId) {
+  const path = findNodePath(hierarchyData, nodeId);
+  const breadcrumb = document.getElementById('dashboard-breadcrumb');
+  if (!breadcrumb || !path) return;
+
+  breadcrumb.innerHTML = path.map((node, i) => {
+    const isLast = i === path.length - 1;
+    return `
+      <span class="breadcrumb-item ${isLast ? 'active' : ''}" data-id="${node.id}" data-label="${node.label.replace(/"/g, '&quot;')}" data-count="${node.count}" onclick="selectDashboardHierarchyByData(this)">
+        ${node.label}
+      </span>
+      ${!isLast ? '<span class="breadcrumb-sep">›</span>' : ''}
+    `;
+  }).join('');
+}
+
+function selectDashboardHierarchyByData(element) {
+  const id = element.getAttribute('data-id');
+  const label = element.getAttribute('data-label');
+  const count = parseInt(element.getAttribute('data-count'), 10);
+  selectDashboardHierarchy(id, label, count);
+}
+
+function updateDashboardTeamKPIs(count) {
+  const submittedPercent = Math.floor(Math.random() * 30) + 60; // 60-90%
+  const submitted = Math.floor(count * submittedPercent / 100);
+  const pending = count - submitted;
+  const achievement = Math.floor(Math.random() * 20) + 75; // 75-95%
+
+  const totalEl = document.getElementById('dashboard-team-total');
+  const submittedEl = document.getElementById('dashboard-team-submitted');
+  const submittedPctEl = document.getElementById('dashboard-team-submitted-pct');
+  const pendingEl = document.getElementById('dashboard-team-pending');
+  const achievementEl = document.getElementById('dashboard-team-achievement');
+
+  if (totalEl) totalEl.textContent = count;
+  if (submittedEl) submittedEl.textContent = submitted;
+  if (submittedPctEl) submittedPctEl.textContent = `✓ ${submittedPercent}% completion`;
+  if (pendingEl) pendingEl.textContent = pending;
+  if (achievementEl) achievementEl.textContent = `${achievement}%`;
+}
+
+function filterDashboardHierarchy(event) {
+  filterHierarchy(event);
+}
+
+// Initialize on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialize dashboard hierarchy if team tab is active
+  if (document.getElementById('dashboard-team').classList.contains('active')) {
+    renderDashboardHierarchy();
+  }
+});
+
+// Hierarchy data structure
+const hierarchyData = {
+  id: 'bangladesh',
+  label: 'All Bangladesh',
+  count: 250,
+  icon: '🇧🇩',
+  children: [
+    {
+      id: 'dhaka',
+      label: 'Dhaka Region',
+      count: 80,
+      icon: '🏙️',
+      children: [
+        {
+          id: 'gulshan',
+          label: 'Gulshan Area',
+          count: 25,
+          icon: '📍',
+          children: [
+            { id: 'gulshan-t1', label: 'Territory 1', count: 8, icon: '👥' },
+            { id: 'gulshan-t2', label: 'Territory 2', count: 10, icon: '👥' },
+            { id: 'gulshan-t3', label: 'Territory 3', count: 7, icon: '👥' }
+          ]
+        },
+        {
+          id: 'banani',
+          label: 'Banani Area',
+          count: 30,
+          icon: '📍',
+          children: [
+            { id: 'banani-t1', label: 'Territory 1', count: 12, icon: '👥' },
+            { id: 'banani-t2', label: 'Territory 2', count: 18, icon: '👥' }
+          ]
+        },
+        {
+          id: 'uttara',
+          label: 'Uttara Area',
+          count: 25,
+          icon: '📍',
+          children: [
+            { id: 'uttara-t1', label: 'Territory 1', count: 13, icon: '👥' },
+            { id: 'uttara-t2', label: 'Territory 2', count: 12, icon: '👥' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'chittagong',
+      label: 'Chittagong Region',
+      count: 70,
+      icon: '🏙️',
+      children: [
+        {
+          id: 'ctg-central',
+          label: 'Chittagong Central Area',
+          count: 40,
+          icon: '📍',
+          children: [
+            { id: 'ctg-c-t1', label: 'Territory 1', count: 20, icon: '👥' },
+            { id: 'ctg-c-t2', label: 'Territory 2', count: 20, icon: '👥' }
+          ]
+        },
+        {
+          id: 'ctg-port',
+          label: 'Port Area',
+          count: 30,
+          icon: '📍',
+          children: [
+            { id: 'ctg-p-t1', label: 'Territory 1', count: 15, icon: '👥' },
+            { id: 'ctg-p-t2', label: 'Territory 2', count: 15, icon: '👥' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'sylhet',
+      label: 'Sylhet Region',
+      count: 50,
+      icon: '🏙️',
+      children: [
+        {
+          id: 'sylhet-city',
+          label: 'Sylhet City Area',
+          count: 30,
+          icon: '📍',
+          children: [
+            { id: 'sylhet-c-t1', label: 'Territory 1', count: 15, icon: '👥' },
+            { id: 'sylhet-c-t2', label: 'Territory 2', count: 15, icon: '👥' }
+          ]
+        },
+        {
+          id: 'moulvibazar',
+          label: 'Moulvibazar Area',
+          count: 20,
+          icon: '📍',
+          children: [
+            { id: 'moulvi-t1', label: 'Territory 1', count: 10, icon: '👥' },
+            { id: 'moulvi-t2', label: 'Territory 2', count: 10, icon: '👥' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'rajshahi',
+      label: 'Rajshahi Region',
+      count: 50,
+      icon: '🏙️',
+      children: [
+        {
+          id: 'rajshahi-metro',
+          label: 'Rajshahi Metro Area',
+          count: 50,
+          icon: '📍',
+          children: [
+            { id: 'rajshahi-t1', label: 'Territory 1', count: 25, icon: '👥' },
+            { id: 'rajshahi-t2', label: 'Territory 2', count: 25, icon: '👥' }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+let currentHierarchyScope = { id: 'dhaka', label: 'Dhaka Region', count: 80 };
+let expandedNodes = new Set(['bangladesh', 'dhaka']);
+
+function renderHierarchyTree() {
+  const tree = document.getElementById('team-tree');
+  if (!tree) return;
+
+  tree.innerHTML = renderNode(hierarchyData, 0);
+}
+
+function renderNode(node, level) {
+  const isExpanded = expandedNodes.has(node.id);
+  const isSelected = currentHierarchyScope.id === node.id;
+  const hasChildren = node.children && node.children.length > 0;
+
+  let html = `
+    <div class="hierarchy-node ${isSelected ? 'selected' : ''}" data-id="${node.id}" data-label="${node.label.replace(/"/g, '&quot;')}" data-count="${node.count}" onclick="selectHierarchyNodeByData(this)">
+      ${hasChildren ?
+        `<span class="node-expand" data-node-id="${node.id}" onclick="event.stopPropagation(); toggleNodeByData(this)">${isExpanded ? '▼' : '▶'}</span>` :
+        '<span class="node-expand"></span>'
+      }
+      <span class="node-icon">${node.icon}</span>
+      <span class="node-label">${node.label}</span>
+      <span class="node-count">${node.count}</span>
+    </div>
+  `;
+
+  if (hasChildren && isExpanded) {
+    html += `<div class="node-children show">`;
+    node.children.forEach(child => {
+      html += renderNode(child, level + 1);
+    });
+    html += '</div>';
+  } else if (hasChildren) {
+    html += `<div class="node-children">`;
+    node.children.forEach(child => {
+      html += renderNode(child, level + 1);
+    });
+    html += '</div>';
+  }
+
+  return html;
+}
+
+function toggleNode(nodeId) {
+  if (expandedNodes.has(nodeId)) {
+    expandedNodes.delete(nodeId);
+  } else {
+    expandedNodes.add(nodeId);
+  }
+  renderHierarchyTree();
+}
+
+function toggleNodeByData(element) {
+  const nodeId = element.getAttribute('data-node-id');
+  toggleNode(nodeId);
+}
+
+function selectHierarchyNodeByData(element) {
+  const id = element.getAttribute('data-id');
+  const label = element.getAttribute('data-label');
+  const count = parseInt(element.getAttribute('data-count'), 10);
+  selectHierarchyNode(id, label, count);
+}
+
+function selectHierarchyNode(id, label, count) {
+  currentHierarchyScope = { id, label, count };
+
+  // Update Team Dashboard button
+  const labelEl = document.getElementById('team-label');
+  const countEl = document.getElementById('team-count');
+  if (labelEl) labelEl.textContent = label;
+  if (countEl) countEl.textContent = count;
+
+  // Update scope text
+  const scopeEl = document.getElementById('team-scope');
+  if (scopeEl) scopeEl.textContent = `${label} (${count} users)`;
+
+  // Update KPIs
+  const submittedPercent = Math.floor(Math.random() * 30) + 60;
+  const submitted = Math.floor(count * submittedPercent / 100);
+  const pending = count - submitted;
+
+  const totalEl = document.getElementById('team-total');
+  const submittedEl = document.getElementById('team-submitted');
+  const pendingEl = document.getElementById('team-pending');
+
+  if (totalEl) totalEl.textContent = count;
+  if (submittedEl) submittedEl.textContent = submitted;
+  if (pendingEl) pendingEl.textContent = pending;
+
+  // Update breadcrumb
+  updateBreadcrumb(id);
+
+  // Re-render tree to show selection
+  renderHierarchyTree();
+
+  // Close dropdown
+  const dropdown = document.getElementById('team-dropdown');
+  if (dropdown) dropdown.classList.remove('show');
+
+  toast(`Filtered to: ${label} (${count} users)`);
+}
+
+function updateDashboardForScope(id, label, count) {
+  // This function is for compatibility - handled by selectHierarchyNode now
+}
+
+function updateBreadcrumb(nodeId) {
+  // Find path to node
+  const path = findNodePath(hierarchyData, nodeId);
+  const breadcrumb = document.querySelector('.hierarchy-breadcrumb');
+  if (!breadcrumb || !path) return;
+
+  breadcrumb.innerHTML = path.map((node, i) => {
+    const isLast = i === path.length - 1;
+    return `
+      <span class="breadcrumb-item ${isLast ? 'active' : ''}" data-id="${node.id}" data-label="${node.label.replace(/"/g, '&quot;')}" data-count="${node.count}" onclick="selectHierarchyNodeByData(this)">
+        ${node.label}
+      </span>
+      ${!isLast ? '<span class="breadcrumb-sep">›</span>' : ''}
+    `;
+  }).join('');
+}
+
+function findNodePath(node, targetId, currentPath = []) {
+  currentPath = [...currentPath, { id: node.id, label: node.label, count: node.count }];
+
+  if (node.id === targetId) {
+    return currentPath;
+  }
+
+  if (node.children) {
+    for (let child of node.children) {
+      const result = findNodePath(child, targetId, currentPath);
+      if (result) return result;
+    }
+  }
+
+  return null;
+}
+
+function updateDashboardForScope(id, label, count) {
+  // Update KPI cards based on scope
+  const submittedPercent = Math.floor(Math.random() * 30) + 60; // 60-90%
+  const submitted = Math.floor(count * submittedPercent / 100);
+  const pending = count - submitted;
+
+  // Update Team Dashboard KPIs
+  const totalEl = document.querySelector('#team-dashboard .kpi:nth-child(1) .num');
+  const submittedEl = document.querySelector('#team-dashboard .kpi:nth-child(2) .num');
+  const pendingEl = document.querySelector('#team-dashboard .kpi:nth-child(3) .num');
+
+  if (totalEl) totalEl.textContent = count;
+  if (submittedEl) submittedEl.textContent = submitted;
+  if (pendingEl) pendingEl.textContent = pending;
+
+  // Update info box
+  const infoBox = document.querySelector('.hierarchy-info-text b:nth-child(2)');
+  if (infoBox) infoBox.textContent = `${label} (${count} users)`;
+}
+
+function toggleHierarchyDropdown(event) {
+  event.stopPropagation();
+  const dropdown = document.getElementById('team-dropdown');
+  if (!dropdown) return;
+
+  dropdown.classList.toggle('show');
+
+  if (dropdown.classList.contains('show')) {
+    renderHierarchyTree();
+  }
+}
+
+function renderHierarchyTreeForTeam() {
+  const tree = document.getElementById('team-tree');
+  if (!tree) return;
+  tree.innerHTML = renderNode(hierarchyData, 0);
+}
+
+function updateTeamBreadcrumb(nodeId) {
+  const path = findNodePath(hierarchyData, nodeId);
+  const breadcrumb = document.getElementById('team-breadcrumb');
+  if (!breadcrumb || !path) return;
+
+  breadcrumb.innerHTML = path.map((node, i) => {
+    const isLast = i === path.length - 1;
+    return `
+      <span class="breadcrumb-item ${isLast ? 'active' : ''}" data-id="${node.id}" data-label="${node.label.replace(/"/g, '&quot;')}" data-count="${node.count}" onclick="selectHierarchyNodeByData(this)">
+        ${node.label}
+      </span>
+      ${!isLast ? '<span class="breadcrumb-sep">›</span>' : ''}
+    `;
+  }).join('');
+}
+
+function filterHierarchy(event) {
+  const query = event.target.value.toLowerCase();
+  const nodes = document.querySelectorAll('.hierarchy-node');
+
+  nodes.forEach(node => {
+    const label = node.querySelector('.node-label').textContent.toLowerCase();
+    if (label.includes(query)) {
+      node.style.display = 'flex';
+      // Show parent containers
+      let parent = node.parentElement;
+      while (parent && parent.classList.contains('node-children')) {
+        parent.style.display = 'block';
+        parent = parent.parentElement;
+      }
+    } else if (query) {
+      node.style.display = 'none';
+    } else {
+      node.style.display = 'flex';
+    }
+  });
+}
+
+// View switching functionality
+function switchView(viewId) {
+  // Hide all views
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+
+  // Show selected view
+  const targetView = document.getElementById(viewId);
+  if (targetView) {
+    targetView.classList.add('active');
+  }
+
+  // Update navigation
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  const activeButton = document.querySelector(`button[data-view="${viewId}"]`);
+  if (activeButton) {
+    activeButton.classList.add('active');
+  }
+
+  // Update breadcrumb
+  const titles = {
+    'dashboard': 'Overview',
+    'tasks': 'My Tasks',
+    'team-dashboard': 'Team Dashboard',
+    'approvals': 'Team Plan Reviews',
+    'review': 'Progress & Review',
+    'reports': 'Reports',
+    'user-report': 'User-wise Report',
+    'users': 'Users & Roles',
+    'templates': 'Task Types',
+    'settings': 'Configuration'
+  };
+
+  const crumbEl = document.getElementById('crumb');
+  if (crumbEl) {
+    crumbEl.textContent = titles[viewId] || 'Overview';
+  }
+}
+
+// Toast notification
+function toast(message) {
+  const toastEl = document.createElement('div');
+  toastEl.className = 'toast';
+  toastEl.textContent = message;
+  document.body.appendChild(toastEl);
+
+  setTimeout(() => {
+    toastEl.remove();
+  }, 3000);
+}
+
+// Set up navigation click handlers
+function setupNavigation() {
+  document.querySelectorAll('.nav button[data-view]').forEach(button => {
+    button.addEventListener('click', function() {
+      const viewId = this.getAttribute('data-view');
+      if (viewId) {
+        switchView(viewId);
+      }
+    });
+  });
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const dropdowns = document.querySelectorAll('.hierarchy-dropdown');
+  dropdowns.forEach(dropdown => {
+    const filter = dropdown.closest('.hierarchy-filter');
+    if (filter && !filter.contains(e.target)) {
+      dropdown.classList.remove('show');
+    }
+  });
+});
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialize Team Dashboard hierarchy
+  renderHierarchyTree();
+  updateBreadcrumb('dhaka');
+  updateTeamBreadcrumb('dhaka');
+
+  // Initialize Dashboard tab hierarchy
+  renderDashboardHierarchy();
+  updateDashboardBreadcrumb('dhaka');
+
+  // Setup navigation
+  setupNavigation();
+
+  console.log('✅ Sokrio Task Manager loaded successfully!');
+});
+
+// Sidebar toggle function
+function toggleSidebar() {
+  const app = document.querySelector('.app');
+  const isCollapsed = app.classList.contains('sidebar-collapsed');
+
+  if (isCollapsed) {
+    app.classList.remove('sidebar-collapsed');
+    localStorage.setItem('sidebarCollapsed', 'false');
+  } else {
+    app.classList.add('sidebar-collapsed');
+    localStorage.setItem('sidebarCollapsed', 'true');
+  }
+}
+
+// Restore sidebar state on load
+document.addEventListener('DOMContentLoaded', function() {
+  const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+  if (sidebarCollapsed) {
+    document.querySelector('.app').classList.add('sidebar-collapsed');
+  }
+});
+</script>
+
+</body>
+</html>
